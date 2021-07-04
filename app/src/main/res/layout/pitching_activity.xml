@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:orientation="horizontal"
+    android:layout_marginLeft="@dimen/pitching_layout_left_margin">
+
+    <LinearLayout
+        android:id="@+id/visitor_pitchers"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <GridLayout
+            android:id="@+id/visitor_pitchers_grid_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></GridLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/visitor_pitchers_sums"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <GridLayout
+            android:id="@+id/visitor_pitchers_sums_grid_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></GridLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/space"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home_pitchers"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <GridLayout
+            android:id="@+id/home_pitchers_grid_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></GridLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home_pitchers_sums"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <GridLayout
+            android:id="@+id/home_pitchers_sums_grid_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></GridLayout>
+    </LinearLayout>
+
+</LinearLayout>
+
+
+
+
+

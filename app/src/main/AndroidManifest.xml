@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.sc">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/baseball_1280x1246"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".StartUpActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="Main"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".AtBatActivity"
+            android:label="At Bat"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".PitchingActivity"
+            android:label="Pitching"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".AddBatterActivity"
+            android:label="Add Batter"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".AddPitcherActivity"
+            android:label="Add Batter"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="landscape"/>
+    </application>
+
+</manifest>

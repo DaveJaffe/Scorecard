@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Scorecard</string>
+    <string name="settings">Settings</string>
+    <string name="open_file">Files</string>
+    <string name="menu_return">Return</string>
+    <string name="exit">Exit/Game Over</string>
+    <string name="undo">Undo</string>
+    <string name="other_team">Other Team</string>
+    <string name="end_inning">End Inning</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="number_batters">Number of Batters</string>
+    <string name="number_innings_reg">Number of Innings in Regulation</string>
+    <string name="cancel">Cancel</string>
+    <string name="set">Set</string>
+    <string name="commentPrompt">Enter comment here, then click Done</string>
+    <string name="enter_batter_name">Enter batter name, then click Done</string>
+    <string name="select_batter_number">Select Batter Number</string>
+    <string name="enter_pitcher_name">Enter pitcher name, then click Done</string>
+    <string name="select_pitcher_number">Select Pitcher Number</string>
+    <string name="RBIs">RBIs</string>
+    <string name="Errors">Error</string>
+    <string name="StrikeoutType">K</string>
+    <string name="Pitching">Pitching</string>
+    <string name="ER">Earned Runs</string>
+    <string name="track_b_s">Track Balls and Strikes</string>
+</resources>

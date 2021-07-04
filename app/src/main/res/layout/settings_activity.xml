@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_marginLeft="50dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/popup_insert_point1"
+        android:orientation="vertical"
+        android:layout_marginLeft="400dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/numberBattersButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/number_batters"
+        android:textSize="25sp"/>
+
+    <Button
+        android:id="@+id/numberInningsRegButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/number_innings_reg"
+        android:textSize="25sp"/>
+
+    <CheckBox
+        android:id="@+id/track_b_s_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/DarkerGray"
+        android:text="@string/track_b_s"
+        android:textSize="25sp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginLeft="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textSize="25sp"/>
+
+        <Button
+            android:id="@+id/setButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set"
+            android:textSize="25sp"/>
+    </LinearLayout>
+</LinearLayout>

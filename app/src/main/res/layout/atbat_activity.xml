@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/AtBat"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.example.sc.CanvasView
+            android:id="@+id/focus_canvas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/RBIButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/RBIs"
+                android:textAllCaps="false"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/ErrorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/Errors"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/StrikeoutTypeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/StrikeoutType"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/focus_textbox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="end" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/insert_point"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+
+        <TextView
+            android:id="@+id/comment_textbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/commentPrompt"/>
+
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="textNoSuggestions"/>
+
+        <TextView
+            android:id="@+id/track_b_s_title"
+            android:text="Balls   Strikes"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/focus_b_s_top_margin"
+            android:layout_marginLeft="@dimen/focus_b_s_left_margin"
+            android:visibility="invisible"/>
+
+        <LinearLayout
+            android:id="@+id/bs_row1"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/track_b_s_title"
+            android:layout_marginLeft="@dimen/focus_b_s_left_margin"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/ball1"
+                android:text="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/DarkerGray"
+                android:layoutDirection="rtl"
+                android:visibility="invisible"/>
+
+            <CheckBox
+                android:id="@+id/strike1"
+                android:text="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/DarkerGray"
+                android:layoutDirection="rtl"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bs_row2"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bs_row1"
+            android:layout_marginLeft="@dimen/focus_b_s_left_margin"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/ball2"
+                android:text="2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/DarkerGray"
+                android:layoutDirection="rtl"
+                android:visibility="invisible"/>
+
+            <CheckBox
+                android:id="@+id/strike2"
+                android:text="2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/DarkerGray"
+                android:layoutDirection="rtl"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/foulButton"
+                android:layout_width="@dimen/foul_button_width"
+                android:layout_height="@dimen/foul_button_height"
+                android:drawableLeft="@drawable/ic_baseline_add_24"
+                android:visibility="invisible"/>/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bs_row3"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bs_row2"
+            android:layout_marginLeft="@dimen/focus_b_s_left_margin"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/ball3"
+                android:text="3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/DarkerGray"
+                android:layoutDirection="rtl"
+                android:visibility="invisible"/>
+
+            <CheckBox
+                android:id="@+id/strike3"
+                android:text="3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/DarkerGray"
+                android:layoutDirection="rtl"
+                android:visibility="invisible"/>
+
+            <TextView
+                android:id="@+id/number_of_fouls"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bs_row4"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bs_row3"
+            android:layout_marginLeft="@dimen/focus_b_s_left_margin"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/ball4"
+                android:text="4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/DarkerGray"
+                android:layoutDirection="rtl"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

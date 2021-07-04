@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="100dp">
+
+    <LinearLayout
+        android:id="@+id/popup_insert_point"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/visitingTeamButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/at_text"
+            android:textSize="30sp"
+            android:text="Select Visiting Team" />
+
+        <TextView
+            android:id="@+id/at_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="   AT   "
+            android:textStyle="bold"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/homeTeamButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/at_text"
+            android:textSize="30sp"
+            android:text="Select Home Team"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/playBallButtonLayout"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:text="PLAY BALL"
+        android:textColor="@color/DarkGreen"
+        android:visibility="invisible"/>>
+
+</LinearLayout>

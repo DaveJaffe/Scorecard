@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="base_text_size">17sp</dimen>
+    <dimen name="action_bar_height">37dp</dimen>
+    <dimen name="main_layout_left_margin">18dp</dimen>
+    <dimen name="focus_b_s_top_margin">80dp</dimen>
+    <dimen name="focus_b_s_left_margin">80dp</dimen>
+    <dimen name="foul_button_width">43dp</dimen>
+    <dimen name="foul_button_height">30dp</dimen>
+    <dimen name="pitching_layout_left_margin">5dp</dimen>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:support="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/settings"
+        support:showAsAction="always"/>
+    <item
+        android:id="@+id/action_open_game_file"
+        android:title="@string/open_file"
+        support:showAsAction="always"/>
+    <!--android:icon="@drawable/ic_open_file_foreground"-->
+    <item
+        android:id="@+id/action_exit"
+        android:icon="@drawable/outline_close_white_18dp"
+        android:title="@string/exit"
+        support:showAsAction="always"/>
+</menu>
