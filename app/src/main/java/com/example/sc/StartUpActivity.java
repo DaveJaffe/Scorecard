@@ -204,7 +204,7 @@ public class StartUpActivity extends AppCompatActivity {
   static String directory_path;
   static String rosters_filename = "rosters.json";
   static String roster_json_str;
-  File game_file;
+  static File game_file;
   static BufferedWriter game_file_bufferedWriter;
 
   static String game_file_header_json;
@@ -263,7 +263,7 @@ public class StartUpActivity extends AppCompatActivity {
       roster_json_str = read_file(directory_path, rosters_filename);
     else roster_json_str = "{\"Teams\": [{\"Name\": \"Team 1\", \"Color\": \"#0000FF\", \"Players\":" +
       "[]}, {\"Name\": \"Team 2\", \"Color\": \"#FF0000\", \"Players\":[]}]}";
-    Log.i(TAG, "roster_json_str: " + roster_json_str);
+    //Log.i(TAG, "roster_json_str: " + roster_json_str);
 
     team_info = parse_roster_json_team_info(roster_json_str);
     //Log.i(TAG, "team_info length: " + team_info.length);

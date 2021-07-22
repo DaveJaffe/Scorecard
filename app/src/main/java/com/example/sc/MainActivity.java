@@ -64,6 +64,7 @@ import static com.example.sc.StartUpActivity.current_pitcher_index;
 import static com.example.sc.StartUpActivity.date_str;
 import static com.example.sc.StartUpActivity.density;
 import static com.example.sc.StartUpActivity.drawLinesColor;
+import static com.example.sc.StartUpActivity.game_file;
 import static com.example.sc.StartUpActivity.game_file_bufferedWriter;
 import static com.example.sc.StartUpActivity.heightPx;
 import static com.example.sc.StartUpActivity.hideNavigation;
@@ -355,14 +356,14 @@ public class MainActivity extends AppCompatActivity {
       pitcher_bitmaps[row] = Bitmap.createBitmap(scoreboard_pitchers_layout_width, scoreboard_row_height, Bitmap.Config.ARGB_8888);
       pitchers[row] = new ImageView(this);
       pitchers[row].setImageBitmap(pitcher_bitmaps[row]);
-      if (row == 0) create_canvas(pitcher_bitmaps[row], Color.WHITE, 0,
-         0, scoreboard_pitchers_layout_width, scoreboard_row_height, team_color[team_displayed], base_text_size, "Pitching",
+      if (row == 0) create_canvas(pitcher_bitmaps[row], Color.WHITE, 2, 2, scoreboard_pitchers_layout_width-2,
+          scoreboard_row_height-2, team_color[team_displayed], base_text_size, "Pitching",
           (int) floor(.05 * scoreboard_pitchers_layout_width), (int) floor(.67 * scoreboard_row_height), false);
-      else if (row == 1) create_canvas(pitcher_bitmaps[row], Color.WHITE, 0, 0, scoreboard_pitchers_layout_width,
-          scoreboard_row_height, team_color[0], base_text_size, pitcher_number_names[current_pitcher_index[0]][0],
+      else if (row == 1) create_canvas(pitcher_bitmaps[row], DarkerGray,2, 2, scoreboard_pitchers_layout_width-2,
+          scoreboard_row_height-2, team_color[0], base_text_size, pitcher_number_names[current_pitcher_index[0]][0],
           0, (int) floor(.67 * scoreboard_row_height), false);
-      else create_canvas(pitcher_bitmaps[row], Color.WHITE, 0, 0, scoreboard_pitchers_layout_width, scoreboard_row_height,
-          team_color[1], base_text_size, pitcher_number_names[current_pitcher_index[1]][1], 0,
+      else create_canvas(pitcher_bitmaps[row], DarkerGray, 2, 2, scoreboard_pitchers_layout_width-2,
+          scoreboard_row_height-2,team_color[1], base_text_size, pitcher_number_names[current_pitcher_index[1]][1], 0,
           (int) floor(.67 * scoreboard_row_height), false);
       scoreboardPitchersLayout.addView(pitchers[row]);
       if (row == 1) {
@@ -379,9 +380,8 @@ public class MainActivity extends AppCompatActivity {
                   ++current_pitcher_index[0];
                 pitcher_number_names[current_pitcher_index[0]][0] = pitcher_number_name;
                 //Log.i(TAG, "pitcher_number_name: " + pitcher_number_names[current_pitcher_index[0]][0]);
-                create_canvas(pitcher_bitmaps[1], Color.WHITE, 0, 0, scoreboard_pitchers_layout_width, scoreboard_row_height, team_color[0],
-                    base_text_size, pitcher_number_name, 0, (int) floor(.67 * scoreboard_row_height),
-                    false);
+                create_canvas(pitcher_bitmaps[1], DarkerGray, 2, 2, scoreboard_pitchers_layout_width-2, scoreboard_row_height-2,
+                    team_color[0], base_text_size, pitcher_number_name, 0, (int) floor(.67 * scoreboard_row_height),false);
                 v.invalidate();
                 return true;
               }
@@ -403,9 +403,8 @@ public class MainActivity extends AppCompatActivity {
                   ++current_pitcher_index[1];
                 pitcher_number_names[current_pitcher_index[1]][1] = pitcher_number_name;
                 //Log.i(TAG, "pitcher_number_name: " + pitcher_number_names[current_pitcher_index[1]][1]);
-                create_canvas(pitcher_bitmaps[2], Color.WHITE, 0, 0, scoreboard_pitchers_layout_width, scoreboard_row_height, team_color[1],
-                    base_text_size, pitcher_number_name, 0, (int) floor(.67 * scoreboard_row_height),
-                    false);
+                create_canvas(pitcher_bitmaps[2], DarkerGray, 2, 2, scoreboard_pitchers_layout_width-2, scoreboard_row_height-2,
+                    team_color[1], base_text_size, pitcher_number_name, 0, (int) floor(.67 * scoreboard_row_height),false);
                 v.invalidate();
                 return true;
               }
@@ -828,66 +827,75 @@ public class MainActivity extends AppCompatActivity {
       case R.id.action_return:
         // region
         AlertDialog.Builder exitDialogBuilder = new AlertDialog.Builder(this);
-        exitDialogBuilder.setCancelable(true)
-          .setTitle("Exit")
-          .setMessage("Select whether to end the game, exit the app, or continue")
-          .setPositiveButton("Game Over", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              //Log.i(TAG, "exitDialogBuilder: Game Over");
-              game_over = true;
-              for (int i =  0; i < inning_half_batters; i++) {
-                atBatInd = atBat_sequence_array[i][team_up];
-                //Log.i(TAG, "atBat_sequence_array[" + i +"][" + team_up + "]=" + atBatInd + " inning=" + atBat_array[atBatInd][team_up].inning );
-                if (atBat_state_array[atBatInd][team_up] == 2) {   // Left on base
-                  //Log.i(TAG, "  sequence: atBat_state_array[" + atBatInd + "][" + team_up + "]=" + atBat_state_array[atBatInd][team_up]);
-                  atBat_state_array[atBatInd][team_up] = 3;
-                  ++inning_lob[inning - 1][team_up];
+        exitDialogBuilder
+          .setCancelable(true)
+          .setTitle("Exit/Game Over")
+          .setItems(
+            new CharSequence[] {"Cancel", "Game Over", "Exit without saving game file", "Exit and save game file"},
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                  case 0:  // Cancel
+                    //Log.i(TAG, "exitDialogBuilder: Cancel");
+                    // Do nothing
+                    break;
+                  case 1:  // Game Over
+                    // region
+                    game_over = true;
+                    for (int i =  0; i < inning_half_batters; i++) {
+                      atBatInd = atBat_sequence_array[i][team_up];
+                      //Log.i(TAG, "atBat_sequence_array[" + i +"][" + team_up + "]=" + atBatInd + " inning=" + atBat_array[atBatInd][team_up].inning );
+                      if (atBat_state_array[atBatInd][team_up] == 2) {   // Left on base
+                        //Log.i(TAG, "  sequence: atBat_state_array[" + atBatInd + "][" + team_up + "]=" + atBat_state_array[atBatInd][team_up]);
+                        atBat_state_array[atBatInd][team_up] = 3;
+                        ++inning_lob[inning - 1][team_up];
+                      }
+                    }
+                    if (atBat_state_array[atBatInd + 1][team_up] == 1) {  // On deck batter
+                      //Log.i(TAG, "  sequence: atBat_state_array[" + (atBatInd + 1) +"][" + team_up + "]=" + atBat_state_array[atBatInd + 1][team_up]);
+                      atBat_state_array[atBatInd + 1][team_up] = 0;
+                    }
+
+                    writeInningDataToGameFile();
+
+                    //Log.i(TAG, "Game Over: Calling drawMain w/ team name = " +  team_name[team_displayed]);
+                    drawMain(team_displayed);
+                    // Finalize game file
+                    DateFormat df = new SimpleDateFormat(" h:mm a");
+                    String date_str = df.format(Calendar.getInstance().getTime());
+                    String score_str;
+                    if (team_runs[0] > team_runs[1]) score_str = team_name[0] + " " + team_runs[0] + ", " + team_name[1] + " " + team_runs[1];
+                    else score_str = team_name[1] + " " + team_runs[1] + ", " + team_name[0] + " " + team_runs[0];
+                    String game_file_footer_json = "]\n,\"GameOver\":{\"Final Score\":\"" + score_str +"\", \"Time\":\"" + date_str  +"\"}\n}";
+                    try {
+                      game_file_bufferedWriter.write(game_file_footer_json);
+                      game_file_bufferedWriter.flush();
+                      //Log.i(TAG, "json footer=" + game_file_footer_json);
+                    } catch (IOException ex) {
+                      //Log.i(TAG, "Write game file footer IOException " + ex.getMessage());
+                      Toast.makeText(MainActivity.this, "Write game file footer IO Exception" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    //endregion
+                    break;
+                  case 2: // Exit without saving game file (i.e. delete saved game file)
+                    // region
+                    //Log.i(TAG, "exitDialogBuilder: Exit without saving game file");
+                    if (game_file.exists()) game_file.delete();
+                    setResult(RESULT_OK, getIntent());
+                    finish();
+                    // endregion
+                    break;
+                  case 3:  // Exit and save game file (i.e. leave saved game file alone)
+                    // region
+                    //Log.i(TAG, "exitDialogBuilder: Exit and save game file");
+                    setResult(RESULT_OK, getIntent());
+                    finish();
+                    // endregion
+                    break;
+                  }
                 }
-              }
-              if (atBat_state_array[atBatInd + 1][team_up] == 1) {  // On deck batter
-                //Log.i(TAG, "  sequence: atBat_state_array[" + (atBatInd + 1) +"][" + team_up + "]=" + atBat_state_array[atBatInd + 1][team_up]);
-                atBat_state_array[atBatInd + 1][team_up] = 0;
-              }
-
-              writeInningDataToGameFile();
-
-              //Log.i(TAG, "Game Over: Calling drawMain w/ team name = " +  team_name[team_displayed]);
-              drawMain(team_displayed);
-              // Finalize game file
-              DateFormat df = new SimpleDateFormat(" h:mm a");
-              String date_str = df.format(Calendar.getInstance().getTime());
-              String score_str;
-              if (team_runs[0] > team_runs[1]) score_str = team_name[0] + " " + team_runs[0] + ", " + team_name[1] + " " + team_runs[1];
-              else score_str = team_name[1] + " " + team_runs[1] + ", " + team_name[0] + " " + team_runs[0];
-              String game_file_footer_json = "]\n,\"GameOver\":{\"Final Score\":\"" + score_str +"\", \"Time\":\"" + date_str  +"\"}\n}";
-              try {
-                game_file_bufferedWriter.write(game_file_footer_json);
-                game_file_bufferedWriter.flush();
-                //Log.i(TAG, "json footer=" + game_file_footer_json);
-              } catch (IOException ex) {
-                //Log.i(TAG, "Write game file footer IOException " + ex.getMessage());
-                Toast.makeText(MainActivity.this, "Write game file footer IO Exception" + ex.getMessage(), Toast.LENGTH_SHORT).show();
-              }
-            }
-          })
-          .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              //Log.i(TAG, "exitDialogBuilder: Cancel");
-              // Do nothing
-            }
-          })
-          .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              //Log.i(TAG, "exitDialogBuilder: Exit");
-              setResult(RESULT_OK, getIntent());
-              finish();
-            }
-          });
-        AlertDialog exitDialog = exitDialogBuilder.create();
-        exitDialog.show();
+              });
+        exitDialogBuilder.create().show();
         break;
         // endregion
       case R.id.action_end_inning:
