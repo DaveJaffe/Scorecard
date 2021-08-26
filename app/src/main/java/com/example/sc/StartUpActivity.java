@@ -42,6 +42,10 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -271,6 +275,8 @@ public class StartUpActivity extends AppCompatActivity {
     final PopupMenu team_popup = new PopupMenu(this, findViewById(R.id.popup_insert_point));
     for (int i = 0; i < team_info.length; i++) team_popup.getMenu().add(0, i, 0, team_info[i][0]);
     // endregion
+
+    getHtmlFromWeb();
 
     // region Button selectVisitors
     final Button selectVisitors = (Button) findViewById(R.id.visitingTeamButton);
@@ -544,6 +550,32 @@ public class StartUpActivity extends AppCompatActivity {
           ex.getMessage(), Toast.LENGTH_SHORT).show();
     }
     return output_str;
+  }
+
+  private void getHtmlFromWeb() {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        try {
+          Document doc = Jsoup.connect("https://www.tutorialspoint.com/").get();
+          String title = doc.title();
+          Elements links = doc.select("a[href]");
+          stringBuilder.append(title).append("\n");
+          for (Element link : links) {
+            stringBuilder.append("\n").append("Link : ").append(link.attr("href")).append("\n").append("Text : ").append(link.text());
+          }
+        } catch (IOException e) {
+          stringBuilder.append("Error : ").append(e.getMessage()).append("\n");
+        }
+        runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            Log.i(TAG, "HTML: " + stringBuilder.toString());
+          }
+        });
+      }
+    }).start();
   }
 
   public String[][] parse_roster_json_team_info(String json_str) {
