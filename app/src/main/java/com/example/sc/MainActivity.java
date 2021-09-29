@@ -38,18 +38,22 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import static java.lang.Math.*;
+import static java.lang.String.format;
 
 import static com.example.sc.StartUpActivity.atBat;
 import static com.example.sc.StartUpActivity.atBat_array;
@@ -63,6 +67,7 @@ import static com.example.sc.StartUpActivity.atBat_state_array;
 import static com.example.sc.StartUpActivity.current_pitcher_index;
 import static com.example.sc.StartUpActivity.date_str;
 import static com.example.sc.StartUpActivity.density;
+import static com.example.sc.StartUpActivity.directory_path;
 import static com.example.sc.StartUpActivity.drawLinesColor;
 import static com.example.sc.StartUpActivity.game_file;
 import static com.example.sc.StartUpActivity.game_file_bufferedWriter;
@@ -132,8 +137,6 @@ public class MainActivity extends AppCompatActivity {
   Bitmap thumbnail_bitmap, thumbnail_bitmap_next_batter;
   Canvas thumbnail_canvas;
   Paint thumbnail_paint;
-  TextView msg_textbox_tv;
-  TextView score_textbox_tv;
   Menu options_menu;
 
   int batterIdx, teamIdx;
@@ -219,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
     if (team_displayed == 0) home_visitor = "Visitors";
     else home_visitor = "Home Team";
     team_str = team_name[team_displayed] + " - " + home_visitor;
-    title = String.format("%-38s %s", team_str, date_str);
+    title = format("%-38s %s", team_str, date_str);
     this.setTitle(title);
     this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(team_color[team_displayed]));
     // endregion
@@ -229,8 +232,10 @@ public class MainActivity extends AppCompatActivity {
     //Log.i(TAG, "number of players=" + number_players[team_displayed]);
     batter_popup.getMenu().add("    New");
     for (int i=0; i < number_players[team_displayed]; i++){
-      //Log.i(TAG, "player: " + player_info[i][0][team_displayed] + "  " + player_info[i][1][team_displayed] + "  " + player_info[i][2][team_displayed]);
-      batter_popup.getMenu().add(String.format("%3d %s",Integer.parseInt(player_info[i][0][team_displayed]), player_info[i][1][team_displayed]));
+      //Log.i(TAG, "player: " +
+      // player_info[i][0][team_displayed] + "  " + player_info[i][1][team_displayed] + "  " + player_info[i][2][team_displayed]);
+      batter_popup.getMenu().
+          add(format("%3d %s", Integer.parseInt(player_info[i][0][team_displayed].trim()), player_info[i][1][team_displayed]));
     }
 
     final PopupMenu position_popup = new PopupMenu(this, findViewById(R.id.batter_insert_point));
@@ -252,13 +257,14 @@ public class MainActivity extends AppCompatActivity {
     final PopupMenu pitcher_popup_visitors = new PopupMenu(this, findViewById(R.id.batter_insert_point));
     pitcher_popup_visitors.getMenu().add("    New");
     for (int i=0; i < number_players[0]; i++){
-      pitcher_popup_visitors.getMenu().add(String.format("%3d %s",Integer.parseInt(player_info[i][0][0]), player_info[i][1][0]));
+      pitcher_popup_visitors.getMenu().
+          add(format("%3d %s",Integer.parseInt(player_info[i][0][0].trim()), player_info[i][1][0]));
     }
 
     final PopupMenu pitcher_popup_home = new PopupMenu(this, findViewById(R.id.batter_insert_point));
     pitcher_popup_home.getMenu().add("    New");
     for (int i=0; i < number_players[1]; i++){
-      pitcher_popup_home.getMenu().add(String.format("%3d %s",Integer.parseInt(player_info[i][0][1]), player_info[i][1][1]));
+      pitcher_popup_home.getMenu().add(format("%3d %s",Integer.parseInt(player_info[i][0][1].trim()), player_info[i][1][1]));
     }
     // endregion
 
@@ -300,19 +306,19 @@ public class MainActivity extends AppCompatActivity {
               (int) floor(.4 * scoreboard_cell_width), (int) floor(.67 * scoreboard_row_height), true);
         }
         else if (row == 1) {  // Visitors
-          if (i < inning-1) scoreboard_cell_value = String.format("%2s", inning_runs[i][0]);
-          else if (i == inning-1 && team_up == 1) scoreboard_cell_value = String.format("%2s", inning_runs[i][0]);
+          if (i < inning-1) scoreboard_cell_value = format("%2s", inning_runs[i][0]);
+          else if (i == inning-1 && team_up == 1) scoreboard_cell_value = format("%2s", inning_runs[i][0]);
           else if (i == inning-1 && team_up == 0 && inning_runs[i][0] == 0) scoreboard_cell_value = "-";
-          else if (i == inning-1 && team_up == 0 && inning_runs[i][0] > 0) scoreboard_cell_value = String.format("%2s", inning_runs[i][0]);
+          else if (i == inning-1 && team_up == 0 && inning_runs[i][0] > 0) scoreboard_cell_value = format("%2s", inning_runs[i][0]);
           else scoreboard_cell_value = "";
           create_canvas(scoreboard_bitmaps[3*i + row], Color.LTGRAY, 0, 0, scoreboard_cell_width - 2,
               scoreboard_row_height - 2, Color.BLACK, base_text_size, scoreboard_cell_value, 0,
               (int) floor(.67 * scoreboard_row_height), true);
         }
         else {  // Home team
-          if (i < inning-1) scoreboard_cell_value = String.format("%2s", inning_runs[i][1]);
+          if (i < inning-1) scoreboard_cell_value = format("%2s", inning_runs[i][1]);
           else if (i == inning-1 && team_up == 1 && inning_runs[i][1] == 0) scoreboard_cell_value = "-";
-          else if (i == inning-1 && team_up == 1 && inning_runs[i][1] > 0) scoreboard_cell_value = String.format("%2s", inning_runs[i][1]);
+          else if (i == inning-1 && team_up == 1 && inning_runs[i][1] > 0) scoreboard_cell_value = format("%2s", inning_runs[i][1]);
           else scoreboard_cell_value = "";
           create_canvas(scoreboard_bitmaps[3*i + row], Color.LTGRAY, 0, 0, scoreboard_cell_width - 2,
               scoreboard_row_height - 2 , Color.BLACK,base_text_size, scoreboard_cell_value, 0,
@@ -336,12 +342,12 @@ public class MainActivity extends AppCompatActivity {
             0, (int) floor(.67 * scoreboard_row_height), true);
       }
       else if (row == 1) {  // Visitors
-        scoreboard_rhe_value = String.format("%2s%3s%3s", team_runs[0], team_hits[0], team_errors[0]);
+        scoreboard_rhe_value = format("%2s%3s%3s", team_runs[0], team_hits[0], team_errors[0]);
         create_canvas(scoreboard_rhe_bitmaps[row], Color.LTGRAY, 0, 0, scoreboard_rhe_layout_width - 2,
             scoreboard_row_height - 2, Color.BLACK, base_text_size, scoreboard_rhe_value,
             0, (int) floor(.67 * scoreboard_row_height), true);
       } else {  // Home team
-        scoreboard_rhe_value = String.format("%2s%3s%3s", team_runs[1], team_hits[1], team_errors[1]);
+        scoreboard_rhe_value = format("%2s%3s%3s", team_runs[1], team_hits[1], team_errors[1]);
         create_canvas(scoreboard_rhe_bitmaps[row], Color.LTGRAY, 0, 0, scoreboard_rhe_layout_width - 2,
             scoreboard_row_height - 2, Color.BLACK, base_text_size, scoreboard_rhe_value,
             0, (int) floor(.67 * scoreboard_row_height), true);
@@ -529,7 +535,7 @@ public class MainActivity extends AppCompatActivity {
 
     for (int i = 0; i < number_batters; i++) {
       sum_bitmaps[i + 1] = Bitmap.createBitmap(sums_layout_width, thumbnail_size, Bitmap.Config.ARGB_8888);
-      String batter_stats_str = String.format("%3d%3d%3d%3d%3d", batter_abs[i][team_displayed], batter_runs[i][team_displayed],
+      String batter_stats_str = format("%3d%3d%3d%3d%3d", batter_abs[i][team_displayed], batter_runs[i][team_displayed],
               batter_hits[i][team_displayed], batter_rbi[i][team_displayed], batter_errors[i][team_displayed]);
       create_canvas(sum_bitmaps[i + 1], DarkerGray, 0, 0, sums_layout_width - 2, thumbnail_size - 2,
               team_color[team_displayed], base_text_size, batter_stats_str, 0, (int) floor(.6 * thumbnail_size), true);
@@ -537,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
 
     sum_bitmaps[number_batters + 1] = Bitmap.createBitmap(sums_layout_width, inning_footer_height, Bitmap.Config.ARGB_8888);
     canvas = new Canvas(sum_bitmaps[number_batters + 1]);
-    String team_stats_str = String.format("%3d%3d%3d%3d%3d", team_abs[team_displayed], team_runs[team_displayed],
+    String team_stats_str = format("%3d%3d%3d%3d%3d", team_abs[team_displayed], team_runs[team_displayed],
             team_hits[team_displayed], team_rbi[team_displayed], team_errors[team_displayed]);
     create_canvas(sum_bitmaps[number_batters + 1], Color.WHITE, 0, 0, sums_layout_width-2, inning_footer_height,
             team_color[team_displayed], base_text_size, team_stats_str, 0, (int) floor(.67 * inning_footer_height), true);
@@ -681,7 +687,7 @@ public class MainActivity extends AppCompatActivity {
         ", \"H\":" + team_hits[1] + ", \"RBI\":" + team_rbi[1] + ", \"E\":" + team_errors[1] + "},\n";
     gfij = gfij + "\"VisitorBatterInfo\":[\n";
     for (int i = 0; i < number_batters; i++) {
-      gfij = gfij + "{\"NumberName\":\"" + batter_number_names[i][0] + "\", \"Pos\":\"" + batter_position[i][0] + "\", " +
+      gfij = gfij + "  {\"NumberName\":\"" + batter_number_names[i][0] + "\", \"Pos\":\"" + batter_position[i][0] + "\", " +
           "\"PA\":" + batter_pa[i][0] + ", \"AB\":" + batter_abs[i][0] + ", \"R\":" + batter_runs[i][0] +
           ", \"H\":" + batter_hits[i][0] + ", \"RBI\":" + batter_rbi[i][0] + ", \"E\":" + batter_errors[i][0];
       if (i == number_batters-1) gfij = gfij + "}\n"; else gfij = gfij + "},\n";
@@ -689,7 +695,7 @@ public class MainActivity extends AppCompatActivity {
     gfij = gfij + "],\n";
     gfij = gfij + "\"VisitorPitcherInfo\":[\n";
     for (int i = 0; i <= current_pitcher_index[0]; i++) {
-      gfij = gfij + "{\"NumberName\":\"" + pitcher_number_names[i][0] + "\", \"BattersFaced\":\"" + pitcher_batters_faced[i][0] + "\", " +
+      gfij = gfij + "  {\"NumberName\":\"" + pitcher_number_names[i][0] + "\", \"BattersFaced\":\"" + pitcher_batters_faced[i][0] + "\", " +
           "\"Outs\":" + pitcher_outs[i][0] + ", \"H\":" + pitcher_hits[i][0] + ", \"R\":" + pitcher_runs[i][0] +
           ", \"ER\":" + pitcher_earned_runs[i][0] + ", \"BB\":" + pitcher_bb[i][0] + ", \"K\":" + pitcher_k[i][0] + ", \"E\":" + pitcher_errors[i][0] +
           ", \"P\":" + pitcher_pitches[i][0] + ", \"B\":" + pitcher_balls[i][0] + ", \"S\":" + pitcher_strikes[i][0];
@@ -698,7 +704,7 @@ public class MainActivity extends AppCompatActivity {
     gfij = gfij + "],\n";
     gfij = gfij + "\"HomeBatterInfo\":[\n";
     for (int i = 0; i < number_batters; i++) {
-      gfij = gfij + "{\"NumberName\":\"" + batter_number_names[i][1] + "\", \"Pos\":\"" + batter_position[i][1] + "\", " +
+      gfij = gfij + "  {\"NumberName\":\"" + batter_number_names[i][1] + "\", \"Pos\":\"" + batter_position[i][1] + "\", " +
           "\"PA\":" + batter_pa[i][1] + ", \"AB\":" + batter_abs[i][1] + ", \"R\":" + batter_runs[i][1] +
           ", \"H\":" + batter_hits[i][1] + ", \"RBI\":" + batter_rbi[i][1] + ", \"E\":" + batter_errors[i][1];
       if (i == number_batters-1) gfij = gfij + "}\n"; else gfij = gfij + "},\n";
@@ -706,7 +712,7 @@ public class MainActivity extends AppCompatActivity {
     gfij = gfij + "],\n";
     gfij = gfij + "\"HomePitcherInfo\":[\n";
     for (int i = 0; i <= current_pitcher_index[1]; i++) {
-      gfij = gfij + "{\"NumberName\":\"" + pitcher_number_names[i][1] + "\", \"BattersFaced\":\"" + pitcher_batters_faced[i][1] + "\", " +
+      gfij = gfij + "  {\"NumberName\":\"" + pitcher_number_names[i][1] + "\", \"BattersFaced\":\"" + pitcher_batters_faced[i][1] + "\", " +
           "\"Outs\":" + pitcher_outs[i][1] + ", \"H\":" + pitcher_hits[i][1] + ", \"R\":" + pitcher_runs[i][1] +
           ", \"ER\":" + pitcher_earned_runs[i][1] + ", \"BB\":" + pitcher_bb[i][1] + ", \"K\":" + pitcher_k[i][1] + ", \"E\":" + pitcher_errors[i][1] +
           ", \"P\":" + pitcher_pitches[i][1] + ", \"B\":" + pitcher_balls[i][1] + ", \"S\":" + pitcher_strikes[i][1];
@@ -762,6 +768,56 @@ public class MainActivity extends AppCompatActivity {
       Toast.makeText(MainActivity.this, "End inning IO Exception" + ex.getMessage(), Toast.LENGTH_SHORT).show();
     }
   }
+
+  public void saveRosters() {
+    File roster_file;
+    BufferedWriter roster_file_bufferedWriter;
+    for (int visitor_or_home = 0; visitor_or_home < 2; visitor_or_home++) {
+      // First sort roster by player number (alphabetically with, eg., " 1")
+      String[][] sorted_player_info = new String[number_players[visitor_or_home]][3];  // Number, Name, Pos
+      for (int i = 0; i < number_players[visitor_or_home]; i++) {
+        sorted_player_info[i][0] = format("%2s", player_info[i][0][visitor_or_home]);
+        sorted_player_info[i][1] = player_info[i][1][visitor_or_home];
+        sorted_player_info[i][2] = player_info[i][2][visitor_or_home];
+      }
+//      for (int i = 0; i < number_players[visitor_or_home]; i++)
+//        Log.i(TAG, "spi: voh=" + visitor_or_home + "|" + sorted_player_info[i][0] + "|" + sorted_player_info[i][1] + "|" + sorted_player_info[i][2]);
+      Arrays.sort(sorted_player_info, (entry1, entry2) -> {
+        final String s1 = entry1[0];
+        final String s2 = entry2[0];
+        return s1.compareTo(s2);
+      });
+      try {
+        String roster_filename_base = "roster_" + team_name[visitor_or_home];
+        roster_filename_base = roster_filename_base.replace(" ", "_");
+        roster_file = new File(directory_path + roster_filename_base + ".json");
+        int file_iteration = 1;
+        while (!roster_file.createNewFile()) {   // If file exists, add number to end, increment if necessary
+          String roster_filename_with_suffix = roster_filename_base + "_" + file_iteration++ + ".json";
+          roster_file = new File(directory_path + roster_filename_with_suffix);
+        }
+        //Log.i(TAG, "roster file: " + roster_file.getAbsoluteFile());
+        roster_file_bufferedWriter = new BufferedWriter(new FileWriter(roster_file));
+        String rj; // Roster json
+        rj = "{\"Name\": \"" + team_name[visitor_or_home] + "\", \"Color\": \"" +
+          format("#%06X", (0xFFFFFF & team_color[visitor_or_home])) + "\", ";
+        rj = rj + "\"Players\":\n  [\n";
+        for (int i = 0; i < number_players[visitor_or_home]; i++) {
+          rj = rj + "    { \"Number\": " + format("%2s", sorted_player_info[i][0]) + ", \"Name\": \"" +
+            sorted_player_info[i][1] + "\", \"Pos\": \"" + sorted_player_info[i][2] + "\" }";
+          if (i == number_players[visitor_or_home] - 1) rj = rj + "\n";
+          else rj = rj + ",\n";
+        }
+        rj = rj + "  ]\n}";
+        //Log.i(TAG, "rj=" + rj);
+        roster_file_bufferedWriter.write(rj + "\n");
+        roster_file_bufferedWriter.flush();
+      } catch (IOException ex) {
+        Log.i(TAG, "save roster file IOException " + ex.getMessage());
+        Toast.makeText(MainActivity.this, "Create roster file IO Exception" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+      } // End try/catch
+    } // End for (int visitor_or_home = 0; visitor_or_home < 2; visitor_or_home++)
+  }  // End saveRosters
     
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -785,21 +841,32 @@ public class MainActivity extends AppCompatActivity {
     else if (requestCode == ACTIVITY_PITCHING) Log.i(TAG, "Return from Pitching Activity");
     else if (requestCode == ACTIVITY_ADDBATTER) {
       if (resultCode == RESULT_OK) {
-        batter_name = data.getStringExtra("batter_name");
-        int batter_number = data.getIntExtra("batter_number", 0);
-        batter_number_name = String.format("%3d %s", batter_number, batter_name);
+        batter_name = data.getStringExtra("BatterName");
+        int batter_number = data.getIntExtra("BatterNumber", 0);
+        batter_number_name = format("%3d %s", batter_number, batter_name);
+        batter_position[batterIdx][team_displayed] = data.getStringExtra("BatterPosition");
         //Log.i(TAG, "Return from AddBatterActivity: resultCode=" + resultCode + " batter_number_name=" + batter_number_name);
         batter_number_names[batterIdx][team_displayed] = batter_number_name;
+        player_info[number_players[team_displayed]][0][team_displayed] = format("%2s", batter_number);
+        player_info[number_players[team_displayed]][1][team_displayed] = batter_name;
+        player_info[number_players[team_displayed]][2][team_displayed] = batter_position[batterIdx][team_displayed];
+        //Log.i(TAG, "new player name=" + player_info[number_players[team_displayed]][1][team_displayed]);
+        number_players[team_displayed] += 1;
+        //Log.i(TAG, "new number_players[" + team_displayed + "]=" + number_players[team_displayed]);
         drawMain(team_displayed);
       }
     }  // End  else if (requestCode == ACTIVITY_ADDBATTER)
     else if (requestCode == ACTIVITY_ADDPITCHER) {
       if (resultCode == RESULT_OK) {
-        pitcher_name = data.getStringExtra("pitcher_name");
-        int pitcher_number = data.getIntExtra("pitcher_number", 0);
-        pitcher_number_name = String.format("%3d %s", pitcher_number, pitcher_name);
+        pitcher_name = data.getStringExtra("PitcherName");
+        int pitcher_number = data.getIntExtra("PitcherNumber", 0);
+        pitcher_number_name = format("%3d %s", pitcher_number, pitcher_name);
         //Log.i(TAG, "Return from AddPitcherActivity: resultCode=" + resultCode + " pitcher_number_name=" + pitcher_number_name + " teamIdx=" + teamIdx);
         pitcher_number_names[current_pitcher_index[teamIdx]][teamIdx]= pitcher_number_name;
+        player_info[number_players[team_displayed]][0][team_displayed] = format("%2s", pitcher_number);
+        player_info[number_players[team_displayed]][1][team_displayed] = pitcher_name;
+        player_info[number_players[team_displayed]][2][team_displayed] = "P";
+        number_players[team_displayed] += 1;
         drawMain(team_displayed);
       }
     }  // End  else if (requestCode == ACTIVITY_ADDPITCHER)
@@ -824,14 +891,15 @@ public class MainActivity extends AppCompatActivity {
         drawMain(team_displayed);
         break;
         // endregion
-      case R.id.action_return:
+      case R.id.action_exit_game_over:
         // region
         AlertDialog.Builder exitDialogBuilder = new AlertDialog.Builder(this);
         exitDialogBuilder
           .setCancelable(true)
           .setTitle("Exit/Game Over")
           .setItems(
-            new CharSequence[] {"Cancel", "Game Over", "Exit without saving game file", "Exit and save game file"},
+            new CharSequence[] {"Cancel", "Game Over", "Exit without saving game file", "Exit and save game file",
+              "Exit and save rosters", "Exit and save game file and rosters"},
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -883,6 +951,7 @@ public class MainActivity extends AppCompatActivity {
                     if (game_file.exists()) game_file.delete();
                     setResult(RESULT_OK, getIntent());
                     finish();
+                    System.exit(0);
                     // endregion
                     break;
                   case 3:  // Exit and save game file (i.e. leave saved game file alone)
@@ -890,6 +959,26 @@ public class MainActivity extends AppCompatActivity {
                     //Log.i(TAG, "exitDialogBuilder: Exit and save game file");
                     setResult(RESULT_OK, getIntent());
                     finish();
+                    System.exit(0);
+                    // endregion
+                    break;
+                  case 4:  // Exit and save rosters
+                    // region
+                    //Log.i(TAG, "exitDialogBuilder: Exit and save rosters");
+                    if (game_file.exists()) game_file.delete();
+                    saveRosters();
+                    setResult(RESULT_OK, getIntent());
+                    finish();
+                    System.exit(0);
+                    // endregion
+                    break;
+                  case 5:  // Exit and save game file (i.e. leave saved game file alone) and rosters
+                    // region
+                    //Log.i(TAG, "exitDialogBuilder: Exit and save game file and rosters");
+                    saveRosters();
+                    setResult(RESULT_OK, getIntent());
+                    finish();
+                    System.exit(0);
                     // endregion
                     break;
                   }

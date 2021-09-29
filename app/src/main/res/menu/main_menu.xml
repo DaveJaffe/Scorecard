@@ -12,7 +12,7 @@
         android:orderInCategory="2"
         support:showAsAction="always"/>
     <item
-        android:id="@+id/action_return"
+        android:id="@+id/action_exit_game_over"
         android:title="@string/exit"
         android:orderInCategory="3"
         support:showAsAction="always"/>

@@ -1,7 +1,7 @@
 package com.example.sc;
 
 /*
-AddPitcherActivity.java - Add Pitcher screen of Scorecard application
+AddTeamActivity.java - Add Team screen of Scorecard application
 
 Copyright 2021 Dave Jaffe
 
@@ -19,15 +19,14 @@ limitations under the License.
  */
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,49 +34,55 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static com.example.sc.StartUpActivity.hideNavigation;
 
-public class AddPitcherActivity extends AppCompatActivity {
-  private static final String TAG = AddBatterActivity.class.getName();
-
-  int pitcher_number = 0;
-  String pitcher_name = "";
+public class AddTeamActivity extends AppCompatActivity {
+  private static final String TAG = AddTeamActivity.class.getName();
+  
+  String new_team_name = "";
+  int new_team_color;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.addpitcher_activity);
+    setContentView(R.layout.addteam_activity);
     hideNavigation(getWindow().getDecorView());
-    Intent setIntent = new Intent();
+    int visitor_or_home = getIntent().getIntExtra("VisitorOrHome", 0);
+    String v_o_h;
+    if (visitor_or_home == 0) v_o_h = "visiting"; else v_o_h = "home";
 
-    EditText newPitcherEdit = (EditText) findViewById(R.id.newPitcherEditText);
-    newPitcherEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    TextView enter_team_name_tv = (TextView) findViewById(R.id.enterTeamNameTextbox);
+    enter_team_name_tv.setText("Enter " + v_o_h + " team name and hit Done");
+
+    // region Enter team name
+    EditText newTeamNameEdit = (EditText) findViewById(R.id.newTeamNameEditText);
+    newTeamNameEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
-          //Log.i(TAG, "new pitcher 0");
-          pitcher_name = view.getText().toString();
+          new_team_name = view.getText().toString();
         }
-        //Log.i(TAG, "new pitcher 2 pitcher_name=" + pitcher_name);
         return false;
       }
     });
     // endregion
 
-    // region Button selectPitcherNumberButton
-    final PopupMenu select_pitcher_number_popup = new PopupMenu(this, findViewById(R.id.select_pitcher_number_popup_insert_point));
-    for (int i = 0; i < 100; i++) select_pitcher_number_popup.getMenu().add(Integer.toString(i));
-    final Button selectPitcherNumber = (Button) findViewById(R.id.selectPitcherNumberButton);
-    selectPitcherNumber.setOnClickListener(new View.OnClickListener() {
-      public void onClick(View v) {
-        select_pitcher_number_popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-          public boolean onMenuItemClick(MenuItem item) {
-            pitcher_number = Integer.parseInt(item.getTitle().toString());
-            Toast.makeText(AddPitcherActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-            return true;
+    TextView enter_team_color_tv = (TextView) findViewById(R.id.enterTeamColorTextbox);
+    enter_team_color_tv.setText("Enter " + v_o_h + " team color (6 hex digits) and hit Done\neg red = FF0000, green = 00FF00, blue = 0000FF");
+
+    // region Enter team color
+    EditText newTeamColorEdit = (EditText) findViewById(R.id.newTeamColorEditText);
+    newTeamColorEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+          try {
+            new_team_color = Color.parseColor("#" + view.getText().toString());
+          } catch (IllegalArgumentException ex) {
+            Toast.makeText(AddTeamActivity.this, "Bad color string: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
           }
-        });
-        select_pitcher_number_popup.show();
+        }
+        return false;
       }
-    });  // End numberPitchers.setOnClickListener
+    });
     // endregion
 
     Button cancelButton = findViewById(R.id.cancelButton);
@@ -95,11 +100,12 @@ public class AddPitcherActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         Intent setIntent = new Intent();
-        setIntent.putExtra("PitcherName", pitcher_name);
-        setIntent.putExtra("PitcherNumber", pitcher_number);
+        setIntent.putExtra("VisitorOrHome", visitor_or_home);
+        setIntent.putExtra("TeamName", new_team_name);
+        setIntent.putExtra("TeamColor", new_team_color);
         setResult(RESULT_OK, setIntent);
         finish();
       }
     });  // End setButton
   }  // End onCreate
-}  // End AddPitcherActivity
+}  // End AddTeamActivity

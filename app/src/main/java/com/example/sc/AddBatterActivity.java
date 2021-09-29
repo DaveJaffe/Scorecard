@@ -32,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import static com.example.sc.StartUpActivity.hideNavigation;
 
 public class AddBatterActivity extends AppCompatActivity {
@@ -40,6 +39,7 @@ public class AddBatterActivity extends AppCompatActivity {
   
   int batter_number = 0;
   String batter_name = "";
+  String batter_position = "";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +79,36 @@ public class AddBatterActivity extends AppCompatActivity {
     });  // End numberBatters.setOnClickListener
     // endregion
 
+    // region Button selectBatterPositionButton
+    final PopupMenu position_popup = new PopupMenu(this, findViewById(R.id.select_batter_number_popup_insert_point));
+    position_popup.getMenu().add("P");
+    position_popup.getMenu().add("C");
+    position_popup.getMenu().add("1B");
+    position_popup.getMenu().add("2B");
+    position_popup.getMenu().add("3B");
+    position_popup.getMenu().add("SS");
+    position_popup.getMenu().add("LF");
+    position_popup.getMenu().add("CF");
+    position_popup.getMenu().add("RF");
+    position_popup.getMenu().add("DH");
+    position_popup.getMenu().add("LC");
+    position_popup.getMenu().add("RC");
+    final Button selectBatterPosition = (Button) findViewById(R.id.selectBatterPositionButton);
+    selectBatterPosition.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v) {
+        position_popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+          public boolean onMenuItemClick(MenuItem item) {
+            batter_position = item.getTitle().toString();
+            Toast.makeText(AddBatterActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+          }
+        });
+        position_popup.show();
+      }
+    });  // End selectBatterPosition.setOnClickListener
+    // endregion
+
+
     Button cancelButton = findViewById(R.id.cancelButton);
     cancelButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -94,8 +124,9 @@ public class AddBatterActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         Intent setIntent = new Intent();
-        setIntent.putExtra("batter_name", batter_name);
-        setIntent.putExtra("batter_number", batter_number);
+        setIntent.putExtra("BatterName", batter_name);
+        setIntent.putExtra("BatterNumber", batter_number);
+        setIntent.putExtra("BatterPosition", batter_position);
         setResult(RESULT_OK, setIntent);
         finish();
       }

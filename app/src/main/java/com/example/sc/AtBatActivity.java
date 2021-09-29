@@ -46,6 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import static java.lang.Math.*;
+import static java.lang.String.format;
 
 import static com.example.sc.StartUpActivity.base_text_size;
 import static com.example.sc.StartUpActivity.density;
@@ -307,7 +308,7 @@ public class AtBatActivity extends AppCompatActivity {
       focus_textbox_tv.setText("At Bat: " + atBatInd + " AtBat State: " + atBat_state_array[atBatInd][team_up]);
       String inning_half_str;
       if (team_up == 0) inning_half_str = "Top"; else inning_half_str = "Bottom";
-      String inning_str = String.format("%s of %d, %d outs", inning_half_str, inning, outs[team_up]);
+      String inning_str = format("%s of %d, %d outs", inning_half_str, inning, outs[team_up]);
       // Use only batter/pitcher name in the AtBat title if specified; if only number specified use that
       batter_number_name = batter_number_names[atBatInd % number_batters][team_up];
       //Log.i(TAG, "atBat current batter batter_number_name: |" + batter_number_name  + "|");
@@ -585,7 +586,7 @@ public class AtBatActivity extends AppCompatActivity {
       focus_textbox_tv.setText("At Bat: " + atBatInd + " AtBat State: " + atBat_state_array[atBatInd][team_up]);
       String inning_half_str;
       if (team_up == 0) inning_half_str = "Top"; else inning_half_str = "Bottom";
-      String inning_str = String.format("%s of %d, %d outs", inning_half_str, inning, outs[team_up]);
+      String inning_str = format("%s of %d, %d outs", inning_half_str, inning, outs[team_up]);
       batter_number_name = atBat_array[atBatInd][team_up].batter_number_name;
       if (!batter_number_name.equals(batter_number_names[atBatInd % number_batters][team_up])) {  // Check for pinch runner
         batter_number_name = batter_number_names[atBatInd % number_batters][team_up];
@@ -722,7 +723,7 @@ public class AtBatActivity extends AppCompatActivity {
       String inning_half_str;
       if (atBat_array[atBatInd][team_up].inning_half == 0) inning_half_str = "Top"; else inning_half_str = "Bottom";
       int balls = atBat_array[atBatInd][team_up].balls; int strikes = atBat_array[atBatInd][team_up].strikes;
-      String title_str = String.format("%s of %d", inning_half_str, atBat_array[atBatInd][team_up].inning);
+      String title_str = format("%s of %d", inning_half_str, atBat_array[atBatInd][team_up].inning);
       if (atBat_array[atBatInd][team_up].scored) title_str = title_str + ":   " + batter_name + " Scored";
       else if (atBat_array[atBatInd][team_up].out_number > 0) title_str = title_str + ":   " + batter_name + " Out";
       else title_str = title_str + ":   " + batter_number_name + " LOB";

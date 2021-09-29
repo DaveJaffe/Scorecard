@@ -6,10 +6,14 @@
         android:title="@string/settings"
         support:showAsAction="always"/>
     <item
-        android:id="@+id/action_open_game_file"
-        android:title="@string/open_file"
+        android:id="@+id/action_game_files"
+        android:title="@string/game_files"
         support:showAsAction="always"/>
     <!--android:icon="@drawable/ic_open_file_foreground"-->
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/help"
+        support:showAsAction="always"/>
     <item
         android:id="@+id/action_exit"
         android:icon="@drawable/outline_close_white_18dp"

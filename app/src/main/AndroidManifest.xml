@@ -29,6 +29,10 @@
             android:label="Main"
             android:screenOrientation="landscape"/>
         <activity
+            android:name=".AddTeamActivity"
+            android:label="Add Team"
+            android:screenOrientation="landscape"/>
+        <activity
             android:name=".AtBatActivity"
             android:label="At Bat"
             android:screenOrientation="landscape"/>
@@ -42,11 +46,15 @@
             android:screenOrientation="landscape"/>
         <activity
             android:name=".AddPitcherActivity"
-            android:label="Add Batter"
+            android:label="Add Pitcher"
             android:screenOrientation="landscape"/>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".HelpActivity"
+            android:label="Scorecard Help"
             android:screenOrientation="landscape"/>
     </application>
 
