@@ -863,10 +863,10 @@ public class MainActivity extends AppCompatActivity {
         pitcher_number_name = format("%3d %s", pitcher_number, pitcher_name);
         //Log.i(TAG, "Return from AddPitcherActivity: resultCode=" + resultCode + " pitcher_number_name=" + pitcher_number_name + " teamIdx=" + teamIdx);
         pitcher_number_names[current_pitcher_index[teamIdx]][teamIdx]= pitcher_number_name;
-        player_info[number_players[team_displayed]][0][team_displayed] = format("%2s", pitcher_number);
-        player_info[number_players[team_displayed]][1][team_displayed] = pitcher_name;
-        player_info[number_players[team_displayed]][2][team_displayed] = "P";
-        number_players[team_displayed] += 1;
+        player_info[number_players[teamIdx]][0][teamIdx] = format("%2s", pitcher_number);
+        player_info[number_players[teamIdx]][1][teamIdx] = pitcher_name;
+        player_info[number_players[teamIdx]][2][teamIdx] = "P";
+        number_players[teamIdx] += 1;
         drawMain(team_displayed);
       }
     }  // End  else if (requestCode == ACTIVITY_ADDPITCHER)
