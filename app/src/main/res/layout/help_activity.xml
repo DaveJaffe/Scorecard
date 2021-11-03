@@ -5,13 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/helpTextbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="25sp"/>
-
     <Button
         android:id="@+id/returnButton"
         android:layout_width="wrap_content"
@@ -19,6 +12,20 @@
         android:text="@string/menu_return"
         android:textSize="25sp"/>
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+
+        <TextView
+            android:id="@+id/helpTextbox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:layout_weight="1.0"/>
+    </ScrollView>
 </LinearLayout>
 
 

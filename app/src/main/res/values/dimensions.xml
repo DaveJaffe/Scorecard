@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="base_text_size">17sp</dimen>
+    <dimen name="base_text_size">18dp</dimen>
     <dimen name="action_bar_height">37dp</dimen>
     <dimen name="main_layout_left_margin">18dp</dimen>
     <dimen name="focus_b_s_top_margin">80dp</dimen>
