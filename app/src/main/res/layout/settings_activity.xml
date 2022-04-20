@@ -34,6 +34,15 @@
         android:text="@string/track_b_s"
         android:textSize="25sp"/>
 
+    <CheckBox
+        android:id="@+id/use_ghost_runner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/DarkerGray"
+        android:text="@string/useGhostRunner"
+        android:checked = "true"
+        android:textSize="25sp"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_marginLeft="50dp"

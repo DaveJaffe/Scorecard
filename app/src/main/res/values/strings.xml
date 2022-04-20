@@ -27,6 +27,7 @@
     <string name="Pitching">Pitching</string>
     <string name="ER">Earned Runs</string>
     <string name="track_b_s">Track Balls and Strikes</string>
+    <string name="useGhostRunner">Use Ghost Runner in Extra Innings</string>
     <string name="downloadMLBRosters">Download MLB Rosters</string>
     <string name="useExistingRosterFile">Use Existing Roster File</string>
 </resources>

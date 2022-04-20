@@ -54,7 +54,8 @@ public class HelpActivity extends AppCompatActivity {
     h_s = h_s + "  - When finished, click on Return icon. If a mistake click on the Undo icon\n";
     h_s = h_s + "For a runner on base, click on square, then click anywhere in On Base window to show how they progressed to next base\n";
     h_s = h_s + "When inning is complete, click on End Inning\n";
-    h_s = h_s + "Under Settings can set number of batters, number of innings in regulation, and whether to track balls and strikes\n";
+    h_s = h_s + "Under Settings can set number of batters (default is 9), number of innings in regulation (default is 9),\n";
+    h_s = h_s + "  whether to track balls and strikes (default is NO), and whether to use a ghost runner in extra innings (default it YES)\n";
     h_s = h_s + "Under Games can select pre-recorded games to view or continue\n";
     h_s = h_s + "NOTE: Before uninstalling/reinstalling app be sure to copy all saved games and rosters\n";
     h_s = h_s + "      from Android/data/com.dj.sc/files to user storage on your pad or phone\n";

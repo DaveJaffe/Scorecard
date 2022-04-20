@@ -68,6 +68,8 @@ import static java.lang.Math.*;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class StartUpActivity extends AppCompatActivity {
   // region Declarations
   private static final String TAG = StartUpActivity.class.getName();
@@ -116,8 +118,11 @@ public class StartUpActivity extends AppCompatActivity {
   static int[][] pitcher_balls = new int[max_number_pitchers][2];
   static int[][] pitcher_strikes = new int[max_number_pitchers][2];
   static boolean track_b_s = false;
+  static boolean use_ghost_runner = true;
 
   static String[][] MLB_teams = new String[40][3]; // Name, ShortName, Color
+  static String[] roster_filenames= new String[50];
+  static int n_rosters = 0;
   static String[] team_name = new String[2];
   static int[] team_color = {0, 0};
   static String[][] team_info = new String[40][2]; // Name, Color
@@ -129,6 +134,9 @@ public class StartUpActivity extends AppCompatActivity {
   static int[][] atBat_state_array = new int[number_atBats][2]; // 0=Not yet, 1=AtBat, 2=OnBase, 3=Finished
   static int[][] atBat_sequence_array = new int[number_atBats][2]; // sequential atBatInds per team
   static int[]  atBat_sequence_index = {0, 0};
+  static int[]  atBat_sequence_index_end_prev_inning = {0, 0};
+  static int[]  atBat_sequence_index_end_curr_inning = {-1, -1};
+  static int[] next_ghost_runner_slot = {0, 0};
   static int[] next_up = {0, 0};
   static int[] outs = {0,0};
   static int[] on_base = {0,0};
@@ -153,7 +161,7 @@ public class StartUpActivity extends AppCompatActivity {
       {"", "Strikeout Swinging", "Strikeout Looking", "Ground Out", "Force Out", "Double Play", "Triple Play", "Line Out To Infield", "Pop Up Out", "Fly Out",
           "Infield Fly Out", "Sacrifice Bunt", "Sacrifice Fly"},  // Outs
       {"Single", "Walk", "Hit By Pitch", "Fielder's Choice", "Safe on Dropped 3rd Strike", "1B Error", "Catcher Interference"},  // Safe - 1 base
-      {"Double", "2B Error"},    // Safe - 2 base
+      {"Double", "2B Error", "Ghost Runner"},    // Safe - 2 base
       {"Triple", "3B Error"},    // Safe - 3 base
       {"Home Run", "4B Error"},  // Safe - 4 base
       {"Advance One Base by Hit/Walk/PB/WP/Sacrifice/FC/Error", "Advance Two Bases by Hit/Walk/PB/WP/Sacrifice/FC/Error",
@@ -164,7 +172,7 @@ public class StartUpActivity extends AppCompatActivity {
   static String[][] atBat_result_text = {
       {"", "K", "\uA4D8", "GO", "FO", "DP", "TP", "LO", "PU", "FLO", "IF", "SB", "SF"},  // Outs
       {"1B", "BB", "HBP", "FC", "KD", "E", "CI"},  // Safe - 1 base
-      {"2B", "E"},   // Safe - 2 base
+      {"2B", "E", "GR"},   // Safe - 2 base
       {"3B", "E"},   // Safe - 3 base
       {"HR", "E"},   // Safe - 4 base
       {"+1", "+2", "+3", "SB", "CS", "PO", "OUT"}    // OnBase
@@ -173,7 +181,7 @@ public class StartUpActivity extends AppCompatActivity {
   static boolean[][] atBat_result_is_ab = {
       {true, true, true, true, true, true, true, true, true, true, true, false, false},  // Outs
       {true, false, false, true, true, true, false},  // Safe - 1 base
-      {true, true},   // Safe - 2 base
+      {true, true, false},   // Safe - 2 base
       {true, true},   // Safe - 3 base
       {true, true}    // Safe - 4 base
   };
@@ -181,7 +189,7 @@ public class StartUpActivity extends AppCompatActivity {
   static boolean[][] atBat_result_is_hit = {
       {false, false, false, false, false, false, false, false, false, false, false, false, false},  // Outs
       {true, false, false, false, false, false, false},  // Safe - 1 base
-      {true, false},   // Safe - 2 base
+      {true, false, false},   // Safe - 2 base
       {true, false},   // Safe - 3 base
       {true, false}    // Safe - 4 base
   };
@@ -292,7 +300,7 @@ public class StartUpActivity extends AppCompatActivity {
     MLB_teams[ 4][0] = "Chicago Cubs";           MLB_teams[ 4][1] = "cubs";        MLB_teams[ 4][2] = "#0E3386";
     MLB_teams[ 5][0] = "Chicago White Sox";      MLB_teams[ 5][1] = "whitesox";    MLB_teams[ 5][2] = "#27251F";
     MLB_teams[ 6][0] = "Cincinnati Reds";        MLB_teams[ 6][1] = "reds";        MLB_teams[ 6][2] = "#C6011F";
-    MLB_teams[ 7][0] = "Cleveland Indians";      MLB_teams[ 7][1] = "indians";     MLB_teams[ 7][2] = "#0C2340";
+    MLB_teams[ 7][0] = "Cleveland Guardians";    MLB_teams[ 7][1] = "guardians";   MLB_teams[ 7][2] = "#0C2340";
     MLB_teams[ 8][0] = "Colorado Rockies";       MLB_teams[ 8][1] = "rockies";     MLB_teams[ 8][2] = "#33006F";
     MLB_teams[ 9][0] = "Detroit Tigers";         MLB_teams[ 9][1] = "tigers";      MLB_teams[ 9][2] = "#0C2340";
     MLB_teams[10][0] = "Houston Astros";         MLB_teams[10][1] = "astros";      MLB_teams[10][2] = "#EB6E1F";
@@ -306,11 +314,11 @@ public class StartUpActivity extends AppCompatActivity {
     MLB_teams[18][0] = "New York Yankees";       MLB_teams[18][1] = "yankees";     MLB_teams[18][2] = "#003087";
     MLB_teams[19][0] = "Oakland Athletics";      MLB_teams[19][1] = "athletics";   MLB_teams[19][2] = "#003831";
     MLB_teams[20][0] = "Philadelphia Phillies";  MLB_teams[20][1] = "phillies";    MLB_teams[20][2] = "#E81828";
-    MLB_teams[21][0] = "Pittsburgh Pirates";     MLB_teams[21][1] = "pirates";     MLB_teams[21][2] = "#FDB827";
-    MLB_teams[22][0] = "St. Louis Cardinals";    MLB_teams[25][1] = "cardinals";   MLB_teams[25][2] = "#C41E3A";
-    MLB_teams[23][0] = "San Diego Padres";       MLB_teams[22][1] = "padres";      MLB_teams[22][2] = "#FDB827";
-    MLB_teams[24][0] = "San Francisco Giants";   MLB_teams[23][1] = "giants";      MLB_teams[23][2] = "#FD5A1E";
-    MLB_teams[25][0] = "Seattle Mariners";       MLB_teams[24][1] = "mariners";    MLB_teams[24][2] = "#005C5C";
+    MLB_teams[21][0] = "Pittsburgh Pirates";     MLB_teams[21][1] = "pirates";     MLB_teams[21][2] = "#27251F";
+    MLB_teams[22][0] = "St. Louis Cardinals";    MLB_teams[22][1] = "cardinals";   MLB_teams[22][2] = "#C41E3A";
+    MLB_teams[23][0] = "San Diego Padres";       MLB_teams[23][1] = "padres";      MLB_teams[23][2] = "#2F241D";
+    MLB_teams[24][0] = "San Francisco Giants";   MLB_teams[24][1] = "giants";      MLB_teams[24][2] = "#FD5A1E";
+    MLB_teams[25][0] = "Seattle Mariners";       MLB_teams[25][1] = "mariners";    MLB_teams[25][2] = "#005C5C";
     MLB_teams[26][0] = "Tampa Bay Rays";         MLB_teams[26][1] = "rays";        MLB_teams[26][2] = "#092C5C";
     MLB_teams[27][0] = "Texas Rangers";          MLB_teams[27][1] = "rangers";     MLB_teams[27][2] = "#C0111F";
     MLB_teams[28][0] = "Toronto Blue Jays";      MLB_teams[28][1] = "bluejays";    MLB_teams[28][2] = "#134A8E";
@@ -325,9 +333,12 @@ public class StartUpActivity extends AppCompatActivity {
     // Find any roster files in external files directory
     directory_path = this.getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + "/";
     //Log.i(TAG, "directory path=" + directory_path);
-    String[] roster_filenames = new File(directory_path).list();
-    for (String roster_filename : roster_filenames) Log.i(TAG, "roster_filename: " + roster_filename);
-
+    //String[] roster_filenames= new String[50];
+    String[] game_and_roster_filenames = new File(directory_path).list();
+    for (String roster_filename : game_and_roster_filenames) if (roster_filename.startsWith("roster")) {
+      roster_filenames[n_rosters++] = roster_filename;
+      //Log.i(TAG, "roster_filename: " + roster_filename);
+    }
     for (int visitor_or_home = 0; visitor_or_home < 2; visitor_or_home++) {
       final int visitor_or_home_final = visitor_or_home;
       // Set up roster popup including submenus for MLB teams and existing rosters
@@ -345,6 +356,7 @@ public class StartUpActivity extends AppCompatActivity {
             //Log.i(TAG, "Download MLB Team Roster->" + team_name[visitor_or_home_final] + " selected");
             // Look up team name in MLB_teams array to get short name and team color
             int k = 0; while (!team_name[visitor_or_home_final].equals(MLB_teams[k][0])) k++;
+            //Log.i(TAG, "roster: k=" + k + " team=" + MLB_teams[k][0]);
             team_color[visitor_or_home_final] = Color.parseColor(MLB_teams[k][2]);
             // Download team roster from mlb.com using team short name
             player_info_one_team = downloadMLBTeamRoster(MLB_teams[k][1]);
@@ -371,7 +383,7 @@ public class StartUpActivity extends AppCompatActivity {
         });
 
       SubMenu existing_roster_menu = roster_popup.getMenu().addSubMenu("Use Existing Team Roster File");
-      for (String roster_filename : roster_filenames)  if (roster_filename.startsWith("roster")) existing_roster_menu
+      for (String roster_filename : roster_filenames) existing_roster_menu
         .add(roster_filename)
         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
           @Override
@@ -393,8 +405,8 @@ public class StartUpActivity extends AppCompatActivity {
             player_info_one_team = parse_roster_json_player_info(roster_json_str);
             number_players[visitor_or_home_final] = player_info_one_team.length;
             //Log.i(TAG, "roster: number_players[" + visitor_or_home_final + "]=" + number_players[visitor_or_home_final]);
-//            for (int i = 0; i < number_players[visitor_or_home_final]; i++) Log.i(TAG, "roster: " +
-//              player_info_one_team[i][0] + " " + player_info_one_team[i][1] + " " + player_info_one_team[i][2]);
+            //for (int i = 0; i < number_players[visitor_or_home_final]; i++) Log.i(TAG, "roster: " +
+            //  player_info_one_team[i][0] + " " + player_info_one_team[i][1] + " " + player_info_one_team[i][2]);
             for (int i = 0; i < number_players[visitor_or_home_final]; i++) {
               for (int j = 0; j < 3; j++) {
                 player_info[i][j][visitor_or_home_final] = player_info_one_team[i][j];
@@ -422,7 +434,10 @@ public class StartUpActivity extends AppCompatActivity {
                   //Log.i(TAG, "Download MLB Team Roster selected");
                   return true;
                 case "Use Existing Team Roster File":
-                  //Log.i(TAG, "Use Existing Team Roster File selected");
+                  //Log.i(TAG, "Use Existing Team Roster File selected, " + n_rosters + " found");
+                  if (n_rosters == 0) {
+                    Toast.makeText(StartUpActivity.this, "No roster files available", Toast.LENGTH_SHORT).show();
+                  }
                   return true;
                 case "Create New Team":
                   //region
@@ -706,7 +721,7 @@ public class StartUpActivity extends AppCompatActivity {
     });
     // Dedupe player info list (MLB includes multiple positions per player)
     ArrayList<String[]> sorted_deduped_player_info = new ArrayList<>();
-    String current_name = sorted_player_info[0][1];;
+    String current_name = sorted_player_info[0][1];
     sorted_deduped_player_info.add(sorted_player_info[0]);
     for (int i = 1; i < n_players - 1; i++){
       if (!sorted_player_info[i][1].equals(current_name)) {
@@ -829,7 +844,7 @@ public class StartUpActivity extends AppCompatActivity {
         player_info[i][2][1] = player_data.getString("Pos");
       }
       JSONArray innings = jsonObj.getJSONArray("Innings");
-      //Log.i(TAG, "found " + innings.length()/2.0 + " innings");
+     //Log.i(TAG, "found " + innings.length()/2.0 + " innings");
       for (int i = 0; i < innings.length(); i++) {
         JSONObject inning_info = innings.getJSONObject(i);
         inning = parseInt(inning_info.getString("Inning"));
@@ -916,6 +931,7 @@ public class StartUpActivity extends AppCompatActivity {
         for (int j = 0; j < atBats.length(); j++) {
           JSONObject atBat = atBats.getJSONObject(j);
           int atBatInd = parseInt(atBat.getString("AtBatInd"));
+          //Log.i(TAG, "In initialize_from_game_file: atBat_sequence_index[" + inning_half + "]=" + atBat_sequence_index[inning_half]);
           atBat_sequence_array[atBat_sequence_index[inning_half]][inning_half] = atBatInd;
           ++atBat_sequence_index[inning_half];
           atBat_state_array[atBatInd][inning_half] = parseInt(atBat.getString("State"));;
@@ -989,15 +1005,17 @@ public class StartUpActivity extends AppCompatActivity {
             }  // End if (ob_step > 0)
           }  // End for (int k=0; k <= atBat_array[atBatInd][inning_half].current_base; k++)
         }  // End for (int j = 0; j < atBats.length(); j++)
-        // Draw line underneath last batter in inning
-        --atBat_sequence_index[inning_half];
-        int last_up_ind = atBat_sequence_array[atBat_sequence_index[inning_half] - 1][inning_half];
-        thumbnail_bitmap = thumbnail_bitmap_array[last_up_ind][inning_half];
-        thumbnail_canvas = new Canvas(thumbnail_bitmap);
-        thumbnail_paint = new Paint();
-        drawLinesColor(thumbnail_canvas, thumbnail_paint, team_color[inning_half], sw, bottom_line);
-        thumbnail_bitmap_array[last_up_ind][inning_half] = thumbnail_bitmap;
-        //Log.i(TAG, "Initialize: atBat_sequence_index[" + inning_half +"]="  + atBat_sequence_index[inning_half]);
+        // Draw line underneath last batter in inning except for last inning
+        if (i < (innings.length()-1)) {
+          //--atBat_sequence_index[inning_half];
+          int last_up_ind = atBat_sequence_array[atBat_sequence_index[inning_half] - 1][inning_half];
+          thumbnail_bitmap = thumbnail_bitmap_array[last_up_ind][inning_half];
+          thumbnail_canvas = new Canvas(thumbnail_bitmap);
+          thumbnail_paint = new Paint();
+          drawLinesColor(thumbnail_canvas, thumbnail_paint, team_color[inning_half], sw, bottom_line);
+          thumbnail_bitmap_array[last_up_ind][inning_half] = thumbnail_bitmap;
+          //Log.i(TAG, "Initialize: atBat_sequence_index[" + inning_half +"]="  + atBat_sequence_index[inning_half]);
+        }
       }  // End for (i = 0; i < innings.length(); i++)
     } catch (JSONException ex) {
     //Log.i("json Exception", ex.getMessage());
@@ -1139,10 +1157,12 @@ public class StartUpActivity extends AppCompatActivity {
         if (new_number_batters == 0) new_number_batters = number_batters;
         if (new_number_innings_regulation == 0) new_number_innings_regulation = number_innings_regulation;
         track_b_s = data.getBooleanExtra("track_b_s", false);
+        use_ghost_runner = data.getBooleanExtra("use_ghost_runner", true);
         initialize_vars(new_number_batters, new_number_innings_regulation);
       }
-      //Log.i(TAG, "Return from SettingsActivity: resultCode=" + resultCode + " new_number_batters=" + new_number_batters
-      //  + " new_number_innings_regulation=" + new_number_innings_regulation + " track_b_s=" + track_b_s);
+      //Log.i(TAG, "Return from SettingsActivity: resultCode=" + resultCode + " new_number_batters=" + new_number_batters//
+      // + " new_number_innings_regulation=" + new_number_innings_regulation + " track_b_s=" + track_b_s
+      // + " use_ghost_runner=" + use_ghost_runner);
     }
     else if (requestCode == ACTIVITY_ADDTEAM) {
       if (resultCode == RESULT_OK) {
@@ -1185,12 +1205,13 @@ public class StartUpActivity extends AppCompatActivity {
         //region
         //Log.i(TAG, "Open game file selected. Directory path=" + directory_path);
         String[] filenames = new File(directory_path).list();
-//        for (String filename : filenames) Log.i(TAG, "game_filename: " + filename);
+        //  for (String filename : filenames) Log.i(TAG, "game_filename: " + filename);
         final PopupMenu game_file_popup = new PopupMenu(this, findViewById(R.id.popup_insert_point));
         for (String filename : filenames) if (filename.startsWith("20")) game_file_popup.getMenu().add(filename);
         //Log.i(TAG, "number of games= " + game_file_popup.getMenu().size());
-        if ((game_file_popup.getMenu().size()) == 0)
+        if ((game_file_popup.getMenu().size()) == 0) {
           Toast.makeText(StartUpActivity.this, "No game files available", Toast.LENGTH_SHORT).show();
+        }
         else {
           game_file_popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {

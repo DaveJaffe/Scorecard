@@ -37,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
   private static final String TAG = SettingsActivity.class.getName();
   int new_number_batters;
   int new_number_innings_regulation;
-  CheckBox track_b_s_checkbox;
+  CheckBox track_b_s_checkbox, use_ghost_runner_checkbox;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
     hideNavigation(getWindow().getDecorView());
     Intent setIntent = new Intent();
     track_b_s_checkbox = (CheckBox) findViewById(R.id.track_b_s_checkbox);
+    use_ghost_runner_checkbox = (CheckBox) findViewById(R.id.use_ghost_runner);
     
     // region Button selectNumberBatters
     final PopupMenu number_batters_popup = new PopupMenu(this, findViewById(R.id.popup_insert_point1));
@@ -101,11 +102,16 @@ public class SettingsActivity extends AppCompatActivity {
         Intent setIntent = new Intent();
         setIntent.putExtra("new_number_innings_regulation", new_number_innings_regulation);
         setIntent.putExtra("new_number_batters", new_number_batters);
-        if (track_b_s_checkbox.isChecked()) setIntent.putExtra("track_b_s", true); else setIntent.putExtra("track_b_s", false);
+        if (track_b_s_checkbox.isChecked()) setIntent.putExtra("track_b_s", true);
+        else setIntent.putExtra("track_b_s", false);
+        if (use_ghost_runner_checkbox.isChecked()) setIntent.putExtra("use_ghost_runner", true);
+        else setIntent.putExtra("use_ghost_runner", false);
+
         setResult(RESULT_OK, setIntent);
         finish();
       }
     });  // End setButton
     // endregion
+
   }  // End onCreate
 }  // End SettingsActivity
