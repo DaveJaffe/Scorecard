@@ -63,12 +63,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
 
 import static java.lang.Math.*;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
-
-import com.google.android.material.snackbar.Snackbar;
 
 public class StartUpActivity extends AppCompatActivity {
   // region Declarations
@@ -164,8 +163,8 @@ public class StartUpActivity extends AppCompatActivity {
       {"Double", "2B Error", "Ghost Runner"},    // Safe - 2 base
       {"Triple", "3B Error"},    // Safe - 3 base
       {"Home Run", "4B Error"},  // Safe - 4 base
-      {"Advance One Base by Hit/Walk/PB/WP/Sacrifice/FC/Error", "Advance Two Bases by Hit/Walk/PB/WP/Sacrifice/FC/Error",
-       "Advance Three Bases by Hit/Walk/PB/WP/Sacrifice/FC/Error", "Stolen Base", "Caught Stealing",
+      {"Advance One Base by Hit/Walk/PB/WP/Sacrifice/FC/Error/Balk/Throw", "Advance Two Bases by Hit/PB/WP/Sacrifice/FC/Error/Throw",
+       "Advance Three Bases by Hit/PB/WP/Sacrifice/FC/Error/Throw", "Stolen Base", "Caught Stealing",
        "Picked Off", "Out on ground out/double play/triple play/thrown out"}   // OnBase
   };
 
@@ -261,7 +260,7 @@ public class StartUpActivity extends AppCompatActivity {
     Point size = new Point();
     display.getRealSize(size);
     real_aspect_ratio = (float) size.x / (float) size.y;
-    String real_aspect_ratio_str = format("%4.2f", real_aspect_ratio);
+    String real_aspect_ratio_str = format(Locale.US, "%4.2f", real_aspect_ratio);
     //Log.i(TAG, "Dimension: real width=" + size.x + " real height=" + size.y + " real aspect ratio=" + real_aspect_ratio_str);
 
     // We will use the full screen except that we will hide the navigation bar at bottom
@@ -609,12 +608,12 @@ public class StartUpActivity extends AppCompatActivity {
   public void play_ball(String[] team_name, final Intent intent) {
     //Log.i(TAG, "In play_ball: " + team_name[0] + " at " + team_name[1]);
     // Set up Play Ball button
-    Button playBall = (Button) findViewById(R.id.playBallButtonLayout);
+    Button playBall = findViewById(R.id.playBallButtonLayout);
     playBall.setVisibility(View.VISIBLE);
     playBall.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
         // Create file to hold game history
-        DateFormat df = new SimpleDateFormat("yyyy_MM_dd");
+        DateFormat df = new SimpleDateFormat("yyyy_MM_dd", Locale.US);
         String year_day_str = df.format(Calendar.getInstance().getTime());
         String game_filename_base = year_day_str + " " + team_name[0] + "_at_" + team_name[1];
         game_filename_base = game_filename_base.replace(" ", "_");
@@ -627,9 +626,9 @@ public class StartUpActivity extends AppCompatActivity {
           }
           //Log.i(TAG, "game file: " + game_file.getAbsoluteFile());
           game_file_bufferedWriter = new BufferedWriter(new FileWriter(game_file));
-          df = new SimpleDateFormat("EEE, MMM d, yyyy");
+          df = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.US);
           date_str = df.format(Calendar.getInstance().getTime());
-          SimpleDateFormat tf = new SimpleDateFormat("h:mm a");
+          SimpleDateFormat tf = new SimpleDateFormat("h:mm a", Locale.US);
           time_str = tf.format(Calendar.getInstance().getTime());
           String gfhj; // game_file_header_json
           gfhj = "{\"Game\":{\"Visitors\":\"" + team_name[0] + "\", \"Home\":\"" + team_name[1]  +
@@ -934,7 +933,7 @@ public class StartUpActivity extends AppCompatActivity {
           //Log.i(TAG, "In initialize_from_game_file: atBat_sequence_index[" + inning_half + "]=" + atBat_sequence_index[inning_half]);
           atBat_sequence_array[atBat_sequence_index[inning_half]][inning_half] = atBatInd;
           ++atBat_sequence_index[inning_half];
-          atBat_state_array[atBatInd][inning_half] = parseInt(atBat.getString("State"));;
+          atBat_state_array[atBatInd][inning_half] = parseInt(atBat.getString("State"));
           atBat ab = new atBat();
           ab.batter_number_name = atBat.getString("Batter");
           ab.pitcher_number_name = atBat.getString("Pitcher");

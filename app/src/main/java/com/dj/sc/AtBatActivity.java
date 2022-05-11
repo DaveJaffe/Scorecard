@@ -45,6 +45,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import static java.lang.Math.*;
 import static java.lang.String.format;
 
@@ -199,8 +201,8 @@ public class AtBatActivity extends AppCompatActivity {
     // endregion
 
     // region Textboxes and action bar
-    comment_textbox_tv = (TextView) findViewById(R.id.comment_textbox);
-    focus_textbox_tv = (TextView) findViewById(R.id.focus_textbox);
+    comment_textbox_tv = findViewById(R.id.comment_textbox);
+    focus_textbox_tv = findViewById(R.id.focus_textbox);
     if (density > 3.0) focus_textbox_tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,0.7f * focus_textbox_tv.getTextSize());
 
     atBatInd = getIntent().getIntExtra("ATBATIDX", 0);
@@ -259,7 +261,7 @@ public class AtBatActivity extends AppCompatActivity {
     // endregion
 
     // region Set up focus bitmap
-    focus_canvas_view = (CanvasView) findViewById(R.id.focus_canvas);
+    focus_canvas_view = findViewById(R.id.focus_canvas);
     focus_canvas_view.setLayoutParams(new LinearLayout.LayoutParams(focus_width, focus_height));
     focus_bitmap = Bitmap.createBitmap(focus_width, focus_height, Bitmap.Config.ARGB_8888);
     canvas = new Canvas(focus_bitmap);
@@ -275,7 +277,7 @@ public class AtBatActivity extends AppCompatActivity {
     // endregion
 
     // region Set up comments text edit
-    EditText commentEdit = (EditText) findViewById(R.id.commentEditText);
+    EditText commentEdit = findViewById(R.id.commentEditText);
     if (!atBat_array[atBatInd][team_up].comment.equals("")) {
       //comment_textbox_tv.setText("");
       commentEdit.setText(atBat_array[atBatInd][team_up].comment);
@@ -308,7 +310,7 @@ public class AtBatActivity extends AppCompatActivity {
       focus_textbox_tv.setText("At Bat: " + atBatInd + " AtBat State: " + atBat_state_array[atBatInd][team_up]);
       String inning_half_str;
       if (team_up == 0) inning_half_str = "Top"; else inning_half_str = "Bottom";
-      String inning_str = format("%s of %d, %d outs", inning_half_str, inning, outs[team_up]);
+      String inning_str = format(Locale.US, "%s of %d, %d outs", inning_half_str, inning, outs[team_up]);
       // Use only batter/pitcher name in the AtBat title if specified; if only number specified use that
       batter_number_name = batter_number_names[atBatInd % number_batters][team_up];
       //Log.i(TAG, "atBat current batter batter_number_name: |" + batter_number_name  + "|");
@@ -323,8 +325,8 @@ public class AtBatActivity extends AppCompatActivity {
       else if (pitcher_number_name.length() > 4) pitcher_name = pitcher_number_name.substring(4); // Name only
       //Log.i(TAG, "atBat current batter pitcher_name: |" + pitcher_name  + "|");
       this.setTitle(inning_str + ":   " + batter_name + " At Bat      Pitching: " +  pitcher_name);
-      //Log.i(TAG, "AtBatActivity: atBat_sequence_array[" + atBat_sequence_index[team_up] + "][" + team_up + "]="  +
-      //  atBat_sequence_array[atBat_sequence_index[team_up]][team_up]);
+      //Log.i(TAG, "Current batter: AtBatActivity: atBat_sequence_array[" + atBat_sequence_index[team_up] + "][" + team_up + "]="  +
+      // atBat_sequence_array[atBat_sequence_index[team_up]][team_up]);
       atBat_array[atBatInd][team_up].batter_number_name = batter_number_name;
       atBat_array[atBatInd][team_up].pitcher_number_name = pitcher_number_names[current_pitcher_index[team_in_field]][team_in_field];
       atBat_array[atBatInd][team_up].inning = inning;
@@ -374,7 +376,7 @@ public class AtBatActivity extends AppCompatActivity {
         }
       });
 
-      final Button RBIButton = (Button) findViewById(R.id.RBIButton);
+      final Button RBIButton = findViewById(R.id.RBIButton);
       RBIButton.setVisibility(View.VISIBLE);
       RBIButton.setOnClickListener(new View.OnClickListener() {
         public void onClick(View v) {
@@ -390,7 +392,7 @@ public class AtBatActivity extends AppCompatActivity {
         }
       });  // End RBIs.setOnClickListener
 
-      final Button errorButton = (Button) findViewById(R.id.ErrorButton);
+      final Button errorButton = findViewById(R.id.ErrorButton);
       errorButton.setVisibility(View.VISIBLE);
       errorButton.setOnClickListener(new View.OnClickListener() {
         public void onClick(View v) {
@@ -423,7 +425,7 @@ public class AtBatActivity extends AppCompatActivity {
       });  // End errorButton.setOnClickListener
 
       if (track_b_s) {
-        TextView track_bs_title_tv = (TextView) findViewById(R.id.track_b_s_title);
+        TextView track_bs_title_tv = findViewById(R.id.track_b_s_title);
         track_bs_title_tv.setVisibility(View.VISIBLE);
 
         // If balls and strikes were stored by a previous return, start with those values
@@ -431,21 +433,21 @@ public class AtBatActivity extends AppCompatActivity {
         n_strikes = atBat_array[atBatInd][team_up].strikes;
         //Log.i(TAG, "Track_b_s: balls=" + n_balls + " strikes=" + n_strikes);
 
-        final CheckBox ball1_checkbox = (CheckBox) findViewById(R.id.ball1);
-        final CheckBox ball2_checkbox = (CheckBox) findViewById(R.id.ball2);
-        final CheckBox ball3_checkbox = (CheckBox) findViewById(R.id.ball3);
-        final CheckBox ball4_checkbox = (CheckBox) findViewById(R.id.ball4);
+        final CheckBox ball1_checkbox = findViewById(R.id.ball1);
+        final CheckBox ball2_checkbox = findViewById(R.id.ball2);
+        final CheckBox ball3_checkbox = findViewById(R.id.ball3);
+        final CheckBox ball4_checkbox = findViewById(R.id.ball4);
 
         ball1_checkbox.setVisibility(View.VISIBLE); ball1_checkbox.setEnabled(true);
         ball2_checkbox.setVisibility(View.VISIBLE); ball2_checkbox.setEnabled(false);
         ball3_checkbox.setVisibility(View.VISIBLE); ball3_checkbox.setEnabled(false);
         ball4_checkbox.setVisibility(View.VISIBLE); ball4_checkbox.setEnabled(false);
 
-        final CheckBox strike1_checkbox = (CheckBox) findViewById(R.id.strike1);
-        final CheckBox strike2_checkbox = (CheckBox) findViewById(R.id.strike2);
-        final CheckBox strike3_checkbox = (CheckBox) findViewById(R.id.strike3);
-        final Button foul_button = (Button) findViewById(R.id.foulButton);
-        final TextView number_of_fouls_tv = (TextView) findViewById(R.id.number_of_fouls);
+        final CheckBox strike1_checkbox = findViewById(R.id.strike1);
+        final CheckBox strike2_checkbox = findViewById(R.id.strike2);
+        final CheckBox strike3_checkbox = findViewById(R.id.strike3);
+        final Button foul_button = findViewById(R.id.foulButton);
+        final TextView number_of_fouls_tv = findViewById(R.id.number_of_fouls);
 
         strike1_checkbox.setVisibility(View.VISIBLE); strike1_checkbox.setEnabled(true);
         strike2_checkbox.setVisibility(View.VISIBLE); strike2_checkbox.setEnabled(false);
@@ -554,7 +556,7 @@ public class AtBatActivity extends AppCompatActivity {
             ball1_checkbox.setEnabled(false);
             ball2_checkbox.setEnabled(false);
             ball3_checkbox.setEnabled(false);
-            final Button StrikeoutTypeButton = (Button) findViewById(R.id.StrikeoutTypeButton);
+            final Button StrikeoutTypeButton = findViewById(R.id.StrikeoutTypeButton);
             StrikeoutTypeButton.setVisibility(View.VISIBLE);
             StrikeoutTypeButton.setOnClickListener(new View.OnClickListener() {
               public void onClick(View v) {
@@ -619,8 +621,7 @@ public class AtBatActivity extends AppCompatActivity {
             c_b = number_bases;
             location = locations[number_bases];
             thumbnail_location = thumbnail_locations[number_bases];
-            fill = false;
-            if (number_bases == 4) fill = true;
+            fill = number_bases == 4;
           }   // End Safe at bat
           else {  // On base event
             if (result_type_ind < 4) {    // Safe on base
@@ -629,8 +630,7 @@ public class AtBatActivity extends AppCompatActivity {
               if (result_type_ind == 1) c_b += 2;
               if (result_type_ind == 2) c_b += 3;
               if (c_b > 4) c_b = 4; // Just in case
-              fill = false;
-              if (c_b == 4) fill = true;
+              fill = c_b == 4;
               location = locations[c_b];
               thumbnail_location = thumbnail_locations[c_b];
             }  // End Safe on base
@@ -669,7 +669,7 @@ public class AtBatActivity extends AppCompatActivity {
         }
       });
 
-      final Button errorButton = (Button) findViewById(R.id.ErrorButton);
+      final Button errorButton = findViewById(R.id.ErrorButton);
       errorButton.setVisibility(View.VISIBLE);
       errorButton.setOnClickListener(new View.OnClickListener() {
         public void onClick(View v) {
@@ -723,7 +723,7 @@ public class AtBatActivity extends AppCompatActivity {
       String inning_half_str;
       if (atBat_array[atBatInd][team_up].inning_half == 0) inning_half_str = "Top"; else inning_half_str = "Bottom";
       int balls = atBat_array[atBatInd][team_up].balls; int strikes = atBat_array[atBatInd][team_up].strikes;
-      String title_str = format("%s of %d", inning_half_str, atBat_array[atBatInd][team_up].inning);
+      String title_str = format(Locale.US, "%s of %d", inning_half_str, atBat_array[atBatInd][team_up].inning);
       if (atBat_array[atBatInd][team_up].scored) title_str = title_str + ":   " + batter_name + " Scored";
       else if (atBat_array[atBatInd][team_up].out_number > 0) title_str = title_str + ":   " + batter_name + " Out";
       else title_str = title_str + ":   " + batter_number_name + " LOB";
@@ -746,7 +746,7 @@ public class AtBatActivity extends AppCompatActivity {
             c_b = number_bases;
             location = locations[number_bases];
             thumbnail_location = thumbnail_locations[number_bases];
-            fill = false; if (number_bases == 4) fill = true;
+            fill = number_bases == 4;
           }  // End Safe at bat
           else {  // On base event
             if (result_type_ind < 4) {    // Safe on base

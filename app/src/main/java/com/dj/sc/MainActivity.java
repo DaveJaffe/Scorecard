@@ -52,6 +52,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
+
 import static java.lang.Math.*;
 import static java.lang.String.format;
 
@@ -245,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
       //Log.i(TAG, "player: " +
       // player_info[i][0][team_displayed] + "  " + player_info[i][1][team_displayed] + "  " + player_info[i][2][team_displayed]);
       batter_popup.getMenu().
-          add(format("%3d %s", Integer.parseInt(player_info[i][0][team_displayed].trim()), player_info[i][1][team_displayed]));
+          add(format(Locale.US,"%3d %s", Integer.parseInt(player_info[i][0][team_displayed].trim()), player_info[i][1][team_displayed]));
     }
 
     final PopupMenu position_popup = new PopupMenu(this, findViewById(R.id.batter_insert_point));
@@ -268,13 +270,13 @@ public class MainActivity extends AppCompatActivity {
     pitcher_popup_visitors.getMenu().add("    New");
     for (int i=0; i < number_players[0]; i++){
       pitcher_popup_visitors.getMenu().
-          add(format("%3d %s",Integer.parseInt(player_info[i][0][0].trim()), player_info[i][1][0]));
+          add(format(Locale.US, "%3d %s",Integer.parseInt(player_info[i][0][0].trim()), player_info[i][1][0]));
     }
 
     final PopupMenu pitcher_popup_home = new PopupMenu(this, findViewById(R.id.batter_insert_point));
     pitcher_popup_home.getMenu().add("    New");
     for (int i=0; i < number_players[1]; i++){
-      pitcher_popup_home.getMenu().add(format("%3d %s",Integer.parseInt(player_info[i][0][1].trim()), player_info[i][1][1]));
+      pitcher_popup_home.getMenu().add(format(Locale.US, "%3d %s",Integer.parseInt(player_info[i][0][1].trim()), player_info[i][1][1]));
     }
     // endregion
 
@@ -296,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
       scoreboardTeamsLayout.addView(scoreboard_teams[row]);
     }
 
-    String scoreboard_cell_value = "";
+    String scoreboard_cell_value;
     HorizontalScrollView scoreboardScrollViewLayout = findViewById(R.id.scoreboard_scrollview_layout);
     scoreboardScrollViewLayout.setLayoutParams(new LinearLayout.LayoutParams(scoreboard_layout_width, top_layout_height));
     GridLayout scoreboardLayout = findViewById(R.id.scoreboard_grid_layout);
@@ -338,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
       }  // End for (int row = 0; row < 3; row++)
     }  // End for (int i = 0; i < number_innings; i++)
 
-    String scoreboard_rhe_value = "";
+    String scoreboard_rhe_value;
     GridLayout scoreboardRHELayout = findViewById(R.id.scoreboard_rhe_layout);
     scoreboardRHELayout.removeAllViews();
     scoreboardRHELayout.setRowCount(3);
@@ -471,8 +473,8 @@ public class MainActivity extends AppCompatActivity {
     // endregion
 
     // region Set up main grid
-    String inning_text = "";
-    String rhlob_text = "";
+    String inning_text;
+    String rhlob_text;
     int display_inning, display_inning_prev;
 
     // Inning headers
@@ -545,7 +547,7 @@ public class MainActivity extends AppCompatActivity {
 
     for (int i = 0; i < number_batters; i++) {
       sum_bitmaps[i + 1] = Bitmap.createBitmap(sums_layout_width, thumbnail_size, Bitmap.Config.ARGB_8888);
-      String batter_stats_str = format("%3d%3d%3d%3d%3d", batter_abs[i][team_displayed], batter_runs[i][team_displayed],
+      String batter_stats_str = format(Locale.US, "%3d%3d%3d%3d%3d", batter_abs[i][team_displayed], batter_runs[i][team_displayed],
               batter_hits[i][team_displayed], batter_rbi[i][team_displayed], batter_errors[i][team_displayed]);
       create_canvas(sum_bitmaps[i + 1], DarkerGray, 0, 0, sums_layout_width - 2, thumbnail_size - 2,
               team_color[team_displayed], base_text_size, batter_stats_str, 0, (int) floor(.6 * thumbnail_size), true);
@@ -553,7 +555,7 @@ public class MainActivity extends AppCompatActivity {
 
     sum_bitmaps[number_batters + 1] = Bitmap.createBitmap(sums_layout_width, inning_footer_height, Bitmap.Config.ARGB_8888);
     canvas = new Canvas(sum_bitmaps[number_batters + 1]);
-    String team_stats_str = format("%3d%3d%3d%3d%3d", team_abs[team_displayed], team_runs[team_displayed],
+    String team_stats_str = format(Locale.US, "%3d%3d%3d%3d%3d", team_abs[team_displayed], team_runs[team_displayed],
             team_hits[team_displayed], team_rbi[team_displayed], team_errors[team_displayed]);
     create_canvas(sum_bitmaps[number_batters + 1], Color.WHITE, 0, 0, sums_layout_width-2, inning_footer_height,
             team_color[team_displayed], base_text_size, team_stats_str, 0, (int) floor(.67 * inning_footer_height), true);
@@ -855,7 +857,7 @@ public class MainActivity extends AppCompatActivity {
       if (resultCode == RESULT_OK) {
         batter_name = data.getStringExtra("BatterName");
         int batter_number = data.getIntExtra("BatterNumber", 0);
-        batter_number_name = format("%3d %s", batter_number, batter_name);
+        batter_number_name = format(Locale.US, "%3d %s", batter_number, batter_name);
         batter_position[batterIdx][team_displayed] = data.getStringExtra("BatterPosition");
         //Log.i(TAG, "Return from AddBatterActivity: resultCode=" + resultCode + " batter_number_name=" + batter_number_name);
         batter_number_names[batterIdx][team_displayed] = batter_number_name;
@@ -872,7 +874,7 @@ public class MainActivity extends AppCompatActivity {
       if (resultCode == RESULT_OK) {
         pitcher_name = data.getStringExtra("PitcherName");
         int pitcher_number = data.getIntExtra("PitcherNumber", 0);
-        pitcher_number_name = format("%3d %s", pitcher_number, pitcher_name);
+        pitcher_number_name = format(Locale.US, "%3d %s", pitcher_number, pitcher_name);
         //Log.i(TAG, "Return from AddPitcherActivity: resultCode=" + resultCode + " pitcher_number_name=" + pitcher_number_name + " teamIdx=" + teamIdx);
         pitcher_number_names[current_pitcher_index[teamIdx]][teamIdx]= pitcher_number_name;
         player_info[number_players[teamIdx]][0][teamIdx] = format("%2s", pitcher_number);
@@ -1001,18 +1003,37 @@ public class MainActivity extends AppCompatActivity {
         // endregion
       case R.id.action_end_inning:
         // region
+        //Log.i(TAG, "End Inning: atBat_sequence_index=" +  atBat_sequence_index[team_up]);
+        int atBatInd = atBat_sequence_array[atBat_sequence_index[team_up]][team_up];  // Batter who made last out or batter who was at bat when out was made on base
         atBat_sequence_index_end_prev_inning[team_up] = atBat_sequence_index_end_curr_inning[team_up];
+        if (atBat_state_array[atBat_sequence_array[atBat_sequence_index[team_up]][team_up]][team_up] == 1) --atBat_sequence_index[team_up]; // 3rd out occurred on base, go back one batter for next inning
         atBat_sequence_index_end_curr_inning[team_up] = atBat_sequence_index[team_up];
-        int atBatInd = atBat_sequence_array[atBat_sequence_index[team_up]][team_up];  // Last batter
-        //Log.i(TAG, "End Inning: atBat_sequence_index=" + atBat_sequence_index[team_up] + " atBatInd=" + atBatInd);
+        //Log.i(TAG, "End Inning: atBat_sequence_index_end_prev_inning=" + atBat_sequence_index_end_prev_inning[team_up]);
+        //Log.i(TAG, "End Inning: atBat_sequence_index_end_curr_inning=" + atBat_sequence_index_end_curr_inning[team_up] + " atBatInd=" + atBatInd);
         //Log.i(TAG, "End Inning: atBat_state_array[atBatInd][team_up]=" + atBat_state_array[atBatInd][team_up]);
 
-        if (atBat_state_array[atBatInd][team_up] == 1) {   // 3rd out occurred on base; resume with current batter next inning
+        if (outs[team_up] < 3) { // Walk off!
+          //Log.i(TAG, "End Inning: Walk off!");
           atBat_state_array[atBatInd][team_up] = 0;
           // Place horizontal line under previous batter
-          int atBatInd_prev = atBat_sequence_array[atBat_sequence_index[team_up]-1][team_up];
-          next_ghost_runner_slot[team_up] = atBatInd_prev
-            + number_batters; // Inning's last batter (not counting batter when out was made on base), in next column, for next v runner
+          int atBatInd_prev = atBat_sequence_array[atBat_sequence_index[team_up]][team_up];
+          thumbnail_bitmap = thumbnail_bitmap_array[atBatInd_prev][team_up];
+          thumbnail_canvas = new Canvas(thumbnail_bitmap);
+          thumbnail_paint = new Paint();
+          drawLinesColor(thumbnail_canvas, thumbnail_paint, team_color[team_up], sw, bottom_line);
+          thumbnail_bitmap_array[atBatInd_prev][team_up] = thumbnail_bitmap;
+          // Set outline of next batter to white
+          thumbnail_bitmap = thumbnail_bitmap_array[atBatInd][team_up];
+          thumbnail_canvas = new Canvas(thumbnail_bitmap);
+          thumbnail_paint = new Paint();
+          drawLinesColor(thumbnail_canvas, thumbnail_paint, Color.WHITE, 2, outline);
+          thumbnail_bitmap_array[atBatInd][team_up] = thumbnail_bitmap;
+        }
+        else if (atBat_state_array[atBatInd][team_up] == 1) {   // 3rd out occurred on base; resume with current batter next inning
+          atBat_state_array[atBatInd][team_up] = 0;
+          // Place horizontal line under previous batter
+          int atBatInd_prev = atBat_sequence_array[atBat_sequence_index[team_up]][team_up];
+          next_ghost_runner_slot[team_up] = atBatInd_prev + number_batters; // Inning's last batter (not counting batter when out was made on base), in next column, for next v runner
           thumbnail_bitmap = thumbnail_bitmap_array[atBatInd_prev][team_up];
           thumbnail_canvas = new Canvas(thumbnail_bitmap);
           thumbnail_paint = new Paint();
@@ -1025,14 +1046,14 @@ public class MainActivity extends AppCompatActivity {
           drawLinesColor(thumbnail_canvas, thumbnail_paint, Color.WHITE, 2, outline);
           thumbnail_bitmap_array[atBatInd][team_up] = thumbnail_bitmap;
           next_up[team_up] = atBatInd + number_batters;  // Start next inning in same row, next column
-          //Log.i(TAG, "End Inning 3rd out occurred on base: Next up calc: atBatInd=" + atBatInd +" Next up =" + next_up[team_up]);
+          //Log.i(TAG, "End Inning: 3rd out occurred on base: Next up calc: atBatInd=" + atBatInd +" Next up =" + next_up[team_up]);
           if (use_ghost_runner && inning >= number_innings_regulation) {
             atBat_sequence_array[atBat_sequence_index[team_up]][team_up] = next_ghost_runner_slot[team_up];
             atBat_sequence_array[++atBat_sequence_index[team_up]][team_up] = next_up[team_up];
           }
-          else atBat_sequence_array[atBat_sequence_index[team_up]][team_up] = next_up[team_up];
-          //Log.i(TAG, "End Inning - last out occurred on base: atBat_sequence_index[team_up]=" + atBat_sequence_index[team_up] +
-          //   " atBat_sequence_array[atBat_sequence_index[team_up]][team_up]=" + atBat_sequence_array[atBat_sequence_index[team_up]][team_up]);
+          else atBat_sequence_array[++atBat_sequence_index[team_up]][team_up] = next_up[team_up];
+          //Log.i(TAG, "End Inning: 3rd out occurred on base: atBat_sequence_index[team_up]=" + atBat_sequence_index[team_up] +
+          //  " atBat_sequence_array[atBat_sequence_index[team_up]][team_up]=" + atBat_sequence_array[atBat_sequence_index[team_up]][team_up]);
         }  // End 3rd out occurred on base; resume with current batter next inning
         else {  // 3rd out occurred at bat
           next_ghost_runner_slot[team_up] = atBatInd + number_batters; // Inning's last batter, in next column, for next ghost runner
@@ -1058,11 +1079,11 @@ public class MainActivity extends AppCompatActivity {
           //  " atBat_sequence_array[atBat_sequence_index[team_up]][team_up]=" + atBat_sequence_array[atBat_sequence_index[team_up]][team_up]);
         }  // End 3rd out occurred at bat
 
-        for (int i =  0; i < inning_half_batters; i++) {
+        for (int i = atBat_sequence_index_end_prev_inning[team_up] + 1; i <= atBat_sequence_index_end_curr_inning[team_up]; i++) {
           atBatInd = atBat_sequence_array[i][team_up];
-          //Log.i(TAG, "atBat_sequence_array[" + i +"][" + team_up + "]=" + atBatInd + " inning=" + atBat_array[atBatInd][team_up].inning );
+          //Log.i(TAG, "End Inning: atBat_sequence_array[" + i +"][" + team_up + "]=" + atBatInd + " inning=" + atBat_array[atBatInd][team_up].inning );
           if (atBat_state_array[atBatInd][team_up] == 2) {   // Left on base
-            //Log.i(TAG, "  sequence: atBat_state_array[" + atBatInd + "][" + team_up + "]=" + atBat_state_array[atBatInd][team_up]);
+            //Log.i(TAG, "End Inning:  sequence: atBat_state_array[" + atBatInd + "][" + team_up + "]=" + atBat_state_array[atBatInd][team_up]);
             atBat_state_array[atBatInd][team_up] = 3;
             ++inning_lob[inning - 1][team_up];
           }
@@ -1078,7 +1099,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (inning >= number_innings_regulation &&                 // We have a winner!
             ((team_runs[1] > team_runs[0]) || (team_up == 1 && team_runs[0] > team_runs[1]))) {
-          DateFormat df = new SimpleDateFormat(" h:mm a");
+          DateFormat df = new SimpleDateFormat(" h:mm a", Locale.US);
           String date_str = df.format(Calendar.getInstance().getTime());
           String score_str;
           if (team_runs[0] > team_runs[1]) score_str = team_name[0] + " " + team_runs[0] + ", " + team_name[1] + " " + team_runs[1];
