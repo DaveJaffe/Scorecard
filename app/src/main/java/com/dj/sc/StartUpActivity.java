@@ -82,7 +82,7 @@ public class StartUpActivity extends AppCompatActivity {
   static int default_number_batters = 9;
   static int max_number_batters = 20;
   static int max_number_pitchers = 13;
-  static int max_players_on_roster = 60;
+  static int max_players_on_roster = 100; // Make very large due to players on IL; players with multiple positions
   static int number_atBats = number_innings * max_number_batters;
   static String[][] player_info_one_team = new String[max_players_on_roster][3];  // Number, Name, Pos
   static int inning = 1;
