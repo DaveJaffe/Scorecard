@@ -3,7 +3,7 @@ package com.dj.sc;
 /*
 StartUpActivity.java - start up code for Scorecard application
 
-Copyright 2021 Dave Jaffe
+Copyright 2023 Dave Jaffe
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ limitations under the License.
 import static org.jsoup.Jsoup.parse;
 
 import android.annotation.SuppressLint;
+//import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,10 +31,13 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
+
+//import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
-import android.util.TypedValue;
+//import android.os.Environment;
+//import android.util.Log;
+//import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -117,14 +121,14 @@ public class StartUpActivity extends AppCompatActivity {
   static int[][] pitcher_balls = new int[max_number_pitchers][2];
   static int[][] pitcher_strikes = new int[max_number_pitchers][2];
   static boolean track_b_s = false;
-  static boolean use_ghost_runner = true;
+  static boolean use_ghost_runner = false;
 
   static String[][] MLB_teams = new String[40][3]; // Name, ShortName, Color
   static String[] roster_filenames= new String[50];
   static int n_rosters = 0;
   static String[] team_name = new String[2];
   static int[] team_color = {0, 0};
-  static String[][] team_info = new String[40][2]; // Name, Color
+  //static String[][] team_info = new String[40][2]; // Name, Color
   static int[] team_abs = {0, 0};
   static int[] team_runs = {0, 0};
   static int[] team_hits = {0, 0};
@@ -201,7 +205,7 @@ public class StartUpActivity extends AppCompatActivity {
     int inning;
     int inning_half;
     int out_number = 0;
-    int ob[] = {0, 0, 0, 0, 0};  // ob[0] is how out was made during atBat, ob[i] shows how batter/runner reached base i or how out was made going to base i
+    int[] ob = {0, 0, 0, 0, 0};  // ob[0] is how out was made during atBat, ob[i] shows how batter/runner reached base i or how out was made going to base i
     int current_base = 0;
     Boolean error_during_at_bat_or_on_base = false;
     float[] ball_in_play_location = {0.0f, 0.0f};
@@ -216,10 +220,10 @@ public class StartUpActivity extends AppCompatActivity {
 
   static atBat[][] atBat_array = new atBat[number_atBats][2];
   
-  static boolean team_set[] = {false, false};
+  static boolean[] team_set = {false, false};
 
   static String directory_path;
-  static String roster_filename;
+  //static String roster_filename;
   static String roster_json_str;
   static File game_file;
   static BufferedWriter game_file_bufferedWriter;
@@ -329,6 +333,7 @@ public class StartUpActivity extends AppCompatActivity {
     // region Buttons selectTeams
     selectTeams[0] = (Button) findViewById(R.id.visitingTeamButton);
     selectTeams[1] = (Button) findViewById(R.id.homeTeamButton);
+
     // Find any roster files in external files directory
     directory_path = this.getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + "/";
     //Log.i(TAG, "directory path=" + directory_path);
@@ -338,6 +343,7 @@ public class StartUpActivity extends AppCompatActivity {
       roster_filenames[n_rosters++] = roster_filename;
       //Log.i(TAG, "roster_filename: " + roster_filename);
     }
+
     for (int visitor_or_home = 0; visitor_or_home < 2; visitor_or_home++) {
       final int visitor_or_home_final = visitor_or_home;
       // Set up roster popup including submenus for MLB teams and existing rosters
@@ -1156,12 +1162,12 @@ public class StartUpActivity extends AppCompatActivity {
         if (new_number_batters == 0) new_number_batters = number_batters;
         if (new_number_innings_regulation == 0) new_number_innings_regulation = number_innings_regulation;
         track_b_s = data.getBooleanExtra("track_b_s", false);
-        use_ghost_runner = data.getBooleanExtra("use_ghost_runner", true);
+        use_ghost_runner = data.getBooleanExtra("use_ghost_runner", false);
         initialize_vars(new_number_batters, new_number_innings_regulation);
       }
-      //Log.i(TAG, "Return from SettingsActivity: resultCode=" + resultCode + " new_number_batters=" + new_number_batters//
-      // + " new_number_innings_regulation=" + new_number_innings_regulation + " track_b_s=" + track_b_s
-      // + " use_ghost_runner=" + use_ghost_runner);
+//      Log.i(TAG, "Return from SettingsActivity: resultCode=" + resultCode + " new_number_batters=" + new_number_batters//
+//       + " new_number_innings_regulation=" + new_number_innings_regulation + " track_b_s=" + track_b_s
+//       + " use_ghost_runner=" + use_ghost_runner);
     }
     else if (requestCode == ACTIVITY_ADDTEAM) {
       if (resultCode == RESULT_OK) {

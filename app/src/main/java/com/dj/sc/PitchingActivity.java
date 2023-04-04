@@ -3,7 +3,7 @@ package com.dj.sc;
 /*
 PitchingActivity.java - pitching stats screen of Scorecard application
 
-Copyright 2021 Dave Jaffe
+Copyright 2023 Dave Jaffe
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
